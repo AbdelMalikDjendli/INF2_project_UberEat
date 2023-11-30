@@ -1,3 +1,6 @@
+/ticket-master/src/main/resources/application.properties
+/ticket-vendor/src/main/resources/application.properties
+/uber-livreur/src/main/resources/application.properties
 .DS_Store
 target
 *.iml

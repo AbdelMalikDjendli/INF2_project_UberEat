@@ -1,8 +1,6 @@
 package fr.pantheonsorbonne.ufr27.miage.service;
 
 import com.google.common.hash.Hashing;
-import fr.pantheonsorbonne.ufr27.miage.dto.ETicket;
-import fr.pantheonsorbonne.ufr27.miage.dto.TicketType;
 import fr.pantheonsorbonne.ufr27.miage.exception.CustomerNotFoundException;
 import fr.pantheonsorbonne.ufr27.miage.exception.ExpiredTransitionalTicketException;
 import fr.pantheonsorbonne.ufr27.miage.dao.CustomerDAO;

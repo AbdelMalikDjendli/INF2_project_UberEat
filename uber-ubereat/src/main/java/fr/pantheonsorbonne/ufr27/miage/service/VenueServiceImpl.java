@@ -2,8 +2,6 @@ package fr.pantheonsorbonne.ufr27.miage.service;
 
 import fr.pantheonsorbonne.ufr27.miage.camel.TicketGateway;
 import fr.pantheonsorbonne.ufr27.miage.dao.VenueQuotaDAO;
-import fr.pantheonsorbonne.ufr27.miage.dto.Gig;
-import fr.pantheonsorbonne.ufr27.miage.dto.RemainingQuota;
 import fr.pantheonsorbonne.ufr27.miage.model.Ticket;
 import fr.pantheonsorbonne.ufr27.miage.model.Venue;
 import fr.pantheonsorbonne.ufr27.miage.model.VenueLineUp;

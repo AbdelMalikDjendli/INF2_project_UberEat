@@ -1,16 +1,12 @@
 package top.nextnet.camel.handler;
 
-import fr.pantheonsorbonne.ufr27.miage.dto.Booking;
-import fr.pantheonsorbonne.ufr27.miage.dto.ETicket;
 import jakarta.enterprise.context.ApplicationScoped;
-import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Handler;
 
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 @ApplicationScoped
 public class BookingResponseHandler {

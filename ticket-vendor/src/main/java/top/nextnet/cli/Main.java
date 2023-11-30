@@ -1,6 +1,5 @@
 package top.nextnet.cli;
 
-import fr.pantheonsorbonne.ufr27.miage.dto.Booking;
 import jakarta.inject.Inject;
 import org.beryx.textio.TextIO;
 import org.beryx.textio.TextIoFactory;

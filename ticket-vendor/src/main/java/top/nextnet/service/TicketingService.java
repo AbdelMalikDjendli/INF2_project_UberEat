@@ -1,7 +1,5 @@
 package top.nextnet.service;
 
-import fr.pantheonsorbonne.ufr27.miage.dto.ETicket;
-
 import java.util.Collection;
 
 public interface TicketingService {

@@ -1,13 +1,9 @@
 package fr.pantheonsorbonne.ufr27.miage.service;
 
 import com.google.common.hash.Hashing;
-import fr.pantheonsorbonne.ufr27.miage.dto.ETicket;
-import fr.pantheonsorbonne.ufr27.miage.dto.TicketType;
 import fr.pantheonsorbonne.ufr27.miage.exception.CustomerNotFoundException;
 import fr.pantheonsorbonne.ufr27.miage.exception.ExpiredTransitionalTicketException;
-import fr.pantheonsorbonne.ufr27.miage.dao.CustomerDAO;
-import fr.pantheonsorbonne.ufr27.miage.dao.NoSuchTicketException;
-import fr.pantheonsorbonne.ufr27.miage.dao.TicketDAO;
+import fr.pantheonsorbonne.ufr27.miage.dao.DeliveryManDAO;
 
 import fr.pantheonsorbonne.ufr27.miage.model.Customer;
 import fr.pantheonsorbonne.ufr27.miage.model.Ticket;
@@ -24,7 +20,7 @@ public class TicketingServiceImpl implements TicketingService {
 
 
     @Inject
-    CustomerDAO customerDAO;
+    DeliveryManDAO deliveryManDAO;
 
     @Inject
     TicketDAO ticketDAO;
@@ -42,9 +38,9 @@ public class TicketingServiceImpl implements TicketingService {
 
         Customer customer = null;
         try {
-            customer = customerDAO.findMatchingCustomer(eticket.getEmail());
+            customer = deliveryManDAO.findMatchingCustomer(eticket.getEmail());
         } catch (CustomerNotFoundException e) {
-            customer = customerDAO.createNewCustomer(eticket.getFname(), eticket.getLname(), eticket.getEmail());
+            customer = deliveryManDAO.createNewCustomer(eticket.getFname(), eticket.getLname(), eticket.getEmail());
         }
 
         Ticket ticket = ticketDAO.findTicket(eticket.getTransitionalTicketId());

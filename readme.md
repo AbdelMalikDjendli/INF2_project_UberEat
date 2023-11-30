@@ -15,7 +15,7 @@ En cas d'annulation du concert, le master prévient les vendors (avec les inform
 ## Interfaces
 
 ```
-artist->master: POST venue
+deliveryMan->master: POST venue
 vendor->master: GET Gigs
 master->vendor: Collection<Gigs>
 
@@ -35,7 +35,7 @@ else booking unsuccessfull
 end
 
 opt venue cancellation
-    artist->master: DELETE venue
+    deliveryMan->master: DELETE venue
     master->vendor: jms:topic:cancellation
     vendor->Customer: smtp:cancellation email
 end

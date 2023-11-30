@@ -1,7 +1,5 @@
 package fr.pantheonsorbonne.ufr27.miage.resources;
 
-import fr.pantheonsorbonne.ufr27.miage.dto.Gig;
-import fr.pantheonsorbonne.ufr27.miage.dto.RemainingQuota;
 import fr.pantheonsorbonne.ufr27.miage.service.VenueService;
 
 import jakarta.inject.Inject;
