@@ -1,5 +1,7 @@
 package fr.pantheonsorbonne.ufr27.miage.dto;
 
+import java.util.List;
+
 public class Order {
     int id;
     String status;
@@ -8,6 +10,17 @@ public class Order {
 
     double lonDarkKitchenPosition;
     double latDarkKitchenPosition;
+
+    public List<Menu> getMenuItems() {
+        return menuItems;
+    }
+
+    public void setMenuItems(List<Menu> menuItems) {
+        this.menuItems = menuItems;
+    }
+
+    private List<Menu> menuItems;
+
 
 
     public Order(int id, String status, double lonCustomerPosition, double latCustomerPosition, double lonDarkKitchenPosition, double latDarkKitchenPosition) {
