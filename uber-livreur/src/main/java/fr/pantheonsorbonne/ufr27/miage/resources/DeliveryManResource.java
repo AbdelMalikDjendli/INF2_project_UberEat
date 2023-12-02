@@ -8,7 +8,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 
 @Path("artist")
-public class ArtistResource {
+public class DeliveryManResource {
 
     @Inject
     VenueService venueService;

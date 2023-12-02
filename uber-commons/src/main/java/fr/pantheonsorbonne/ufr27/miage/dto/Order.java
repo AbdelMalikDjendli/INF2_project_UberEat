@@ -78,5 +78,6 @@ public class Order {
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
         return 6371000 * c;
+        //metre
     }
 }
