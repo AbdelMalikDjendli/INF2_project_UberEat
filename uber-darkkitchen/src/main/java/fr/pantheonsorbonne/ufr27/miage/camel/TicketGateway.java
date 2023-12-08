@@ -26,7 +26,7 @@ public class TicketGateway {
 
     @Inject
     CamelContext camelContext;
-
+/*
     @Handler
     void emitTicket(ETicket eticket) throws NoSuchTicketException, CustomerNotFoundException.NoSeatAvailableException, ExpiredTransitionalTicketException {
         try {
@@ -38,6 +38,8 @@ public class TicketGateway {
     }
 
 
+
+
     public void cancelTicket(Ticket eticket) {
         try (ProducerTemplate producerTemplate = camelContext.createProducerTemplate()) {
             producerTemplate.sendBodyAndHeader("direct:ticketCancel", new CancelationNotice(eticket.getIdCustomer().getEmail(), eticket.getId()), "vendorId", eticket.getIdVendor().getId());
@@ -45,4 +47,6 @@ public class TicketGateway {
             throw new RuntimeException(e);
         }
     }
+
+ */
 }

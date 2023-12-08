@@ -6,15 +6,14 @@ import fr.pantheonsorbonne.ufr27.miage.exception.CustomerNotFoundException;
 import fr.pantheonsorbonne.ufr27.miage.exception.ExpiredTransitionalTicketException;
 import fr.pantheonsorbonne.ufr27.miage.exception.UnsuficientQuotaForVenueException;
 import fr.pantheonsorbonne.ufr27.miage.service.TicketingService;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelExecutionException;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class CamelRoutes extends RouteBuilder {
@@ -60,7 +59,7 @@ public class CamelRoutes extends RouteBuilder {
                 .setHeader("success", simple("false"))
                 .setBody(simple("No seat is available"));
 
-
+/*
         from("sjms2:" + jmsPrefix + "booking?exchangePattern=InOut")//
                 .log("ticker received: ${in.headers}")//
                 .unmarshal().json(Booking.class)//
@@ -71,6 +70,8 @@ public class CamelRoutes extends RouteBuilder {
         from("sjms2:" + jmsPrefix + "ticket?exchangePattern=InOut")
                 .unmarshal().json(ETicket.class)
                 .bean(ticketingService, "emitTicket").marshal().json();
+
+ */
 
 
         from("direct:ticketCancel")
