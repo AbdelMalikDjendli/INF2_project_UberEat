@@ -15,15 +15,13 @@ public class Menu {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "price")
+    private String price;
+
+
     // Constructors
     public Menu() {
     }
-
-    public Menu(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
-
     // Getters and Setters
     public Long getId() {
         return id;
