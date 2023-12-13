@@ -1,6 +1,5 @@
 /ticket-master/src/main/resources/application.properties
 /ticket-vendor/src/main/resources/application.properties
-/uber-livreur/src/main/resources/application.properties
 .DS_Store
 target
 *.iml
@@ -41,5 +40,6 @@ nb-configuration.xml
 .jbang
 .sdkmanrc
 .envrc
-/ticket-master/src/main/resources/application.properties
-/ticket-vendor/src/main/resources/application.properties
+/uber-ubereat/src/main/resources/application.properties
+/uber-livreur/src/main/resources/application.properties
+/uber-darkkitchen/src/main/resources/application.properties
