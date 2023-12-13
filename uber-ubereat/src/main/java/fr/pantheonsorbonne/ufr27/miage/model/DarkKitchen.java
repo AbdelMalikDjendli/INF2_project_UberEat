@@ -16,8 +16,11 @@ public class DarkKitchen {
     @Column(name = "address")
     private String address;
 
-    @OneToMany(mappedBy = "darkKitchen")
-    private List<Menu> menus;
+    @ManyToMany
+    @JoinColumn(name = "dark_kitchen_id")
+    private List<Menu> menus; // Liste de menus associés à la dark kitchen
+
+
 
     // constructors, getters, and setters
 }

@@ -2,6 +2,7 @@ package fr.pantheonsorbonne.ufr27.miage.resources;
 
 import fr.pantheonsorbonne.ufr27.miage.model.Menu;
 import fr.pantheonsorbonne.ufr27.miage.service.MenuService;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -12,7 +13,9 @@ import java.util.List;
 
 @Path("/menus")
 public class MenuRessource {
-    private final MenuService menuService;
+
+    @Inject
+    MenuService menuService;
 
     public MenuRessource(MenuService menuService) {
         this.menuService = menuService;

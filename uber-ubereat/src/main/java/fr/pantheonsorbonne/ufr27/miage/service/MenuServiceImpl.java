@@ -1,12 +1,14 @@
 package fr.pantheonsorbonne.ufr27.miage.service;
 
 import fr.pantheonsorbonne.ufr27.miage.model.Menu;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
 
+@ApplicationScoped
 public class MenuServiceImpl implements MenuService {
     @PersistenceContext
     private EntityManager em;
