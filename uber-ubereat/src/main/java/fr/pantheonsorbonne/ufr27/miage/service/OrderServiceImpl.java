@@ -26,4 +26,9 @@ public class OrderServiceImpl implements OrderService{
         entityManager.persist(newOrder);
         return newOrder;
     }
+
+    @Override
+    public Order getOrderById(Long orderId) {
+        return entityManager.find(Order.class, orderId);
+    }
 }
