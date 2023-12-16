@@ -13,8 +13,10 @@ public class OrderServiceImpl implements OrderService{
     private EntityManager entityManager;
     @Override
     @Transactional
-    public Order createOrder(Order order) {
+    public Order createOrder(fr.pantheonsorbonne.ufr27.miage.dto.Order order) {
+        Order newOrder = new Order();
+        newOrder.setStatus(order.status());
         entityManager.persist(order);
-        return order;
+        return newOrder;
     }
 }
