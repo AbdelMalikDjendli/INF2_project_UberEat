@@ -1,0 +1,1 @@
+INSERT INTO menu (id, description, name, price) VALUES ('1', 'double cheese', 'burger', '9');
