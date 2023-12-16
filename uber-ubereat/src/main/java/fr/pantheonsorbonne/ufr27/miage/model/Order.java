@@ -14,7 +14,7 @@ public class Order {
     private Menu menu; // Relation avec le menu
 
     @Column(name = "status")
-    private String status; // Statut de la commande
+    private String status = "recherche d'un restaurant";  // Statut de la commande
 
     public Long getId() {
         return id;

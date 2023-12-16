@@ -17,12 +17,12 @@ public class OrderServiceImpl implements OrderService{
     @Transactional
     public Order createOrder(fr.pantheonsorbonne.ufr27.miage.dto.Order dtoOrder) {
         Order newOrder = new Order();
-        newOrder.setStatus(dtoOrder.status());
 
         // Récupérer et associer l'entité Menu à l'Order
-        Menu menu = entityManager.find(Menu.class, (long) dtoOrder.menu_id()); // Assurez-vous que la conversion de type est correcte
+        Menu menu = entityManager.find(Menu.class, (long) dtoOrder.menu_id());
         newOrder.setMenu(menu);
 
+        // Le statut est déjà initialisé par défaut dans l'entité Order
         entityManager.persist(newOrder);
         return newOrder;
     }
