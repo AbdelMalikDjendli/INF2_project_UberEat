@@ -17,6 +17,6 @@ public class DkChoiceServiceImpl implements DkChoiceService {
 
     @Override
     public int getMinEstimation(int estimation) {
-        return 0;
+        return this.currentEstimation;
     }
 }

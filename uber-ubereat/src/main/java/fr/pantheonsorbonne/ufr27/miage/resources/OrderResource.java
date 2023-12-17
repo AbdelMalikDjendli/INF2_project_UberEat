@@ -1,5 +1,6 @@
 package fr.pantheonsorbonne.ufr27.miage.resources;
 
+import fr.pantheonsorbonne.ufr27.miage.camel.OrderGateway;
 import fr.pantheonsorbonne.ufr27.miage.dto.Order;
 import fr.pantheonsorbonne.ufr27.miage.service.OrderService;
 import jakarta.inject.Inject;
@@ -26,6 +27,9 @@ public class OrderResource {
         URI orderUri = UriBuilder.fromResource(OrderResource.class)
                 .path(OrderResource.class, "getOrderStatus")
                 .build(createdOrder.getId());
+
+        OrderGateway orderGateway = new OrderGateway();
+        orderGateway.sendMenuToDarkkitchen(orderDTO.menu_id());
 
         // Renvoyer le code 201 avec l'URL de la commande dans l'en-tête "Location"
         return Response.created(orderUri)

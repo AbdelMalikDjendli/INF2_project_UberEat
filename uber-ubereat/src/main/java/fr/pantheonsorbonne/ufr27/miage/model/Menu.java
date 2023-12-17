@@ -23,6 +23,11 @@ public class Menu {
     public Menu() {
     }
     // Getters and Setters
+
+    public String getPrice() {
+        return price;
+    }
+
     public Long getId() {
         return id;
     }
