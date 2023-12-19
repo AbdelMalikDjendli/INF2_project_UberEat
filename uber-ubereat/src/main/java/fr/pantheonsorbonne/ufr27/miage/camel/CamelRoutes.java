@@ -4,6 +4,7 @@ package fr.pantheonsorbonne.ufr27.miage.camel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.pantheonsorbonne.ufr27.miage.dto.Menu;
+import io.quarkus.logging.Log;
 import io.quarkus.runtime.configuration.ProfileManager;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -14,6 +15,7 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import java.io.Console;
 import java.util.List;
 
 @ApplicationScoped
@@ -30,13 +32,17 @@ public class CamelRoutes extends RouteBuilder {
         camelContext.setTracing(true);
 
 
-        from("sjms2:queue:" + jmsPrefix + "estimation").process(new ChoiceProcessor());
+        from("sjsms2:topic:M1.DK_ESTIMATION").process(new ChoiceProcessor());
 
     }
 
     private static class ChoiceProcessor implements Processor {
         @Override
         public void process(Exchange exchange) throws Exception {
+            String estimation = exchange.getMessage().getBody(String.class);
+            String dkName = exchange.getMessage().getHeader("darkKitchenName",String.class);
+            Log.info("Nouvelle estimation reçu : "+estimation+" par "+dkName);
+
             /*
             MenuDAO menuDAO = new MenuDAOImpl();
             EstimationService estimationService = new EstimationServiceImpl();

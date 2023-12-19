@@ -13,11 +13,15 @@ public class DarkKitchen {
     @Column(name = "name")
     private String name;
 
+    /*
     @Column(name = "address")
     private String address;
 
+
     @OneToMany(mappedBy = "darkKitchen")
     private List<Menu> menus;
+
+     */
 
     // constructors, getters, and setters
 }

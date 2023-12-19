@@ -17,6 +17,9 @@ public class OrderResource {
     @Inject
     OrderService orderService;
 
+    @Inject
+    OrderGateway orderGateway;
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -28,7 +31,6 @@ public class OrderResource {
                 .path(OrderResource.class, "getOrderStatus")
                 .build(createdOrder.getId());
 
-        OrderGateway orderGateway = new OrderGateway();
         orderGateway.sendMenuToDarkkitchen(orderDTO.menu_id());
 
         // Renvoyer le code 201 avec l'URL de la commande dans l'en-tête "Location"

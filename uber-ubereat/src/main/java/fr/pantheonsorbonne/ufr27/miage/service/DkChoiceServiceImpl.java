@@ -16,7 +16,17 @@ public class DkChoiceServiceImpl implements DkChoiceService {
     }
 
     @Override
+    public void setCurrentDarkKitchen(String name) {
+        this.currentDarkKitchen = name;
+    }
+
+    @Override
     public int getMinEstimation(int estimation) {
         return this.currentEstimation;
+    }
+
+    @Override
+    public String getCurrentDarkKitchen() {
+        return this.currentDarkKitchen;
     }
 }

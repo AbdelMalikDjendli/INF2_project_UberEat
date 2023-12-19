@@ -1,6 +1,7 @@
 package fr.pantheonsorbonne.ufr27.miage.service;
 
 import fr.pantheonsorbonne.ufr27.miage.model.Menu;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -8,6 +9,7 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Random;
 
+@ApplicationScoped
 public class EstimationServiceImpl implements EstimationService {
 
     @Override
