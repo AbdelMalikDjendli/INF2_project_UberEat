@@ -32,10 +32,11 @@ public class OrderGateway {
             String orderJson = objectMapper.writeValueAsString(menuDto);
             Message msg =context.createTextMessage(orderJson);
             context.createProducer().send(context.createTopic("sjms2:topic:M1.DK"), msg);
-            Log.info("nouvelle commande :"+ idMenu);
+            Log.info("Commande envoyée au topic 'M1.DK': " + orderJson);
 
         } catch (IOException e) {
             e.printStackTrace();
+            Log.error("Erreur lors de l'envoi de la commande: ", e);
         }
     }
 

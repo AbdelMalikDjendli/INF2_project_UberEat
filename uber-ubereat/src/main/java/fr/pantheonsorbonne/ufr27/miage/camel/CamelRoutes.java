@@ -32,34 +32,15 @@ public class CamelRoutes extends RouteBuilder {
         camelContext.setTracing(true);
 
 
-        from("sjms2:topic:M1.DK_ESTIMATION").process(new ChoiceProcessor());
+        from("sjms2:topic:M1.DK_ESTIMATION").process(new ChoiceProcessor())
+                .log("Message reçu dans la route 'M1.DK_ESTIMATION': ${body}");
 
     }
 
     private static class ChoiceProcessor implements Processor {
         @Override
         public void process(Exchange exchange) throws Exception {
-            /*
-            String estimation = exchange.getMessage().getBody(String.class);
-            String dkName = exchange.getMessage().getHeader("darkKitchenName",String.class);
-             */
-            //Log.info("Nouvelle estimation reçu : "+estimation+" par "+dkName);
-            Log.info("nouvelle estimation reçu");
-
-            /*
-            MenuDAO menuDAO = new MenuDAOImpl();
-            EstimationService estimationService = new EstimationServiceImpl();
-            Menu menuFromJms = exchange.getMessage().getMandatoryBody(Menu.class);
-            List<fr.pantheonsorbonne.ufr27.miage.model.Menu> allMenu = menuDAO.getAllMenu();
-            List<fr.pantheonsorbonne.ufr27.miage.model.Menu> allMenuFiltered =  allMenu.stream()
-                    .filter(menu -> menu.getName().equals(menuFromJms.name()))
-                    .toList();
-            String estimation = allMenuFiltered.isEmpty() ? "indisponible" : estimationService.getRandomEstimation();
-            String activeProfile = ProfileManager.getActiveProfile();
-            exchange.getMessage().setBody(estimation);
-            exchange.getMessage().setHeader("darkKitchenId",activeProfile);
-
-             */
+            Log.info("Traitement d'une nouvelle estimation reçue: " + exchange.getMessage().getBody(String.class));
         }
     }
 }

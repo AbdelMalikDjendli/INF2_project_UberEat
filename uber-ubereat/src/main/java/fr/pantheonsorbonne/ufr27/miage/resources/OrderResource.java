@@ -3,6 +3,7 @@ package fr.pantheonsorbonne.ufr27.miage.resources;
 import fr.pantheonsorbonne.ufr27.miage.camel.OrderGateway;
 import fr.pantheonsorbonne.ufr27.miage.dto.Order;
 import fr.pantheonsorbonne.ufr27.miage.service.OrderService;
+import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -24,6 +25,7 @@ public class OrderResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createOrder(Order orderDTO) {
+        Log.info("Création d'une nouvelle commande avec le menu ID: " + orderDTO.menu_id());
         fr.pantheonsorbonne.ufr27.miage.model.Order createdOrder = orderService.createOrder(orderDTO);
 
         // Construire l'URL pour accéder à la commande créée

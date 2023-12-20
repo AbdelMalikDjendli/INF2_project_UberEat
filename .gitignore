@@ -43,3 +43,4 @@ nb-configuration.xml
 /uber-ubereat/src/main/resources/application.properties
 /uber-livreur/src/main/resources/application.properties
 /uber-darkkitchen/src/main/resources/application.properties
+*.properties
