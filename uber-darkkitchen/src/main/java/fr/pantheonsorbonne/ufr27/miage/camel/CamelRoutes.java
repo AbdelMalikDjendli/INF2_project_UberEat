@@ -8,6 +8,7 @@ import fr.pantheonsorbonne.ufr27.miage.service.EstimationService;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.json.Json;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -29,14 +30,17 @@ public class CamelRoutes extends RouteBuilder {
 
         camelContext.setTracing(true);
 
-        from("sjms2:topic:M1.DK").unmarshal().json(Menu.class)
+        //unmarshal().json(Menu.class)
+
+        from("sjms2:topic:M1.DK")
                 .process(new EstimationProcessor())
                 .to("sjms2:topic:M1.DK_ESTIMATION");
 
     }
 
-    @ApplicationScoped
+    //@ApplicationScoped
     private static class EstimationProcessor implements Processor {
+        /*
         @Inject
         DkDAO dkDAO;
 
@@ -46,12 +50,15 @@ public class CamelRoutes extends RouteBuilder {
         @Inject
         EstimationService estimationService;
 
+         */
+
 
         @Override
         public void process(Exchange exchange) throws Exception {
-            Menu menuFromJms = exchange.getMessage().getMandatoryBody(Menu.class);
-            String nameMenuFromJms = menuFromJms.name();
-            Log.info("nouvelle comande reçu :"+ nameMenuFromJms);
+            //Menu menuFromJms = exchange.getMessage().getMandatoryBody(Menu.class);
+            //String nameMenuFromJms = menuFromJms.name();
+            Log.info("nouvelle comande reçu :"+ exchange.getMessage().getBody());
+            /*
             List<fr.pantheonsorbonne.ufr27.miage.model.Menu> allMenu = menuDAO.getAllMenu();
             List<fr.pantheonsorbonne.ufr27.miage.model.Menu> allMenuFiltered =  allMenu.stream()
                     .filter(menu -> menu.getName().equals(nameMenuFromJms))
@@ -60,6 +67,7 @@ public class CamelRoutes extends RouteBuilder {
            // String activeProfile = ProfileManager.getActiveProfile();
             exchange.getMessage().setBody(estimation);
             exchange.getMessage().setHeader("darkKitchenName",dkDAO.getDKName());
+             */
         }
     }
 }

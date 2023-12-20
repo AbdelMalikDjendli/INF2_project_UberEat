@@ -39,9 +39,12 @@ public class CamelRoutes extends RouteBuilder {
     private static class ChoiceProcessor implements Processor {
         @Override
         public void process(Exchange exchange) throws Exception {
+            /*
             String estimation = exchange.getMessage().getBody(String.class);
             String dkName = exchange.getMessage().getHeader("darkKitchenName",String.class);
-            Log.info("Nouvelle estimation reçu : "+estimation+" par "+dkName);
+             */
+            //Log.info("Nouvelle estimation reçu : "+estimation+" par "+dkName);
+            Log.info("nouvelle estimation reçu");
 
             /*
             MenuDAO menuDAO = new MenuDAOImpl();
