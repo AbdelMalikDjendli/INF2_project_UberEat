@@ -32,7 +32,7 @@ public class CamelRoutes extends RouteBuilder {
         camelContext.setTracing(true);
 
 
-        from("sjsms2:topic:M1.DK_ESTIMATION").process(new ChoiceProcessor());
+        from("sjms2:topic:M1.DK_ESTIMATION").process(new ChoiceProcessor());
 
     }
 

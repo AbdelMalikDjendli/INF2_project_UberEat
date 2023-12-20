@@ -29,7 +29,7 @@ public class OrderGateway {
             Menu menuModel = menuDAO.findMenuById(idMenu);
             fr.pantheonsorbonne.ufr27.miage.dto.Menu menuDto = new fr.pantheonsorbonne.ufr27.miage.dto.Menu(menuModel.getName(), menuModel.getPrice());
             String orderJson = objectMapper.writeValueAsString(menuDto);
-            context.createProducer().send(context.createTopic("sjsms2:topic:M1.DK"), orderJson);
+            context.createProducer().send(context.createTopic("sjms2:topic:M1.DK"), orderJson);
 
         } catch (IOException e) {
             e.printStackTrace();

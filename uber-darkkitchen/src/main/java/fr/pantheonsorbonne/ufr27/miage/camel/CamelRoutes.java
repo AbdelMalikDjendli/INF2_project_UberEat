@@ -29,9 +29,9 @@ public class CamelRoutes extends RouteBuilder {
 
         camelContext.setTracing(true);
 
-        from("sjsms2:topic:M1.DK").unmarshal().json(Menu.class)
+        from("sjms2:topic:M1.DK").unmarshal().json(Menu.class)
                 .process(new EstimationProcessor())
-                .to("sjsms2:topic:M1.DK_ESTIMATION");
+                .to("sjms2:topic:M1.DK_ESTIMATION");
 
     }
 
