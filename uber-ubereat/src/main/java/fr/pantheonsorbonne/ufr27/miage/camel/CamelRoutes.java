@@ -41,7 +41,8 @@ public class CamelRoutes extends RouteBuilder {
     private static class ChoiceProcessor implements Processor {
         @Override
         public void process(Exchange exchange) throws Exception {
-            Log.info("Traitement d'une nouvelle estimation reçue: " + exchange.getMessage().getBody(String.class));
+            String estimation = exchange.getIn().getBody(String.class);
+            Log.info("Estimation de temps reçue : " + estimation);
         }
     }
 }

@@ -22,54 +22,31 @@ import static org.apache.camel.support.DefaultExchangeHolder.unmarshal;
 
 @ApplicationScoped
 public class CamelRoutes extends RouteBuilder {
-    @ConfigProperty(name = "fr.pantheonsorbonne.ufr27.miage.jmsPrefix")
-    String jmsPrefix;
 
     @Inject
-    CamelContext camelContext;
+    EstimationProcessor estimationProcessor;
 
     @Override
     public void configure() throws Exception {
-
-        camelContext.setTracing(true);
-
         from("sjms2:topic:M1.DK")
-                //.unmarshal().json(JsonLibrary.Jackson, Menu.class) // Désérialiser le JSON en objet Menu
-                .process(new EstimationProcessor())
+                .process(estimationProcessor)
                 .to("sjms2:topic:M1.DK_ESTIMATION");
-
     }
 
-    //@ApplicationScoped
+
+
+@ApplicationScoped
     private static class EstimationProcessor implements Processor {
-        /*
-        @Inject
-        DkDAO dkDAO;
-
-        @Inject
-        MenuDAO menuDAO;
-
         @Inject
         EstimationService estimationService;
-
-         */
-
-
         @Override
         public void process(Exchange exchange) throws Exception {
-            //Menu menuFromJms = exchange.getMessage().getMandatoryBody(Menu.class);
-            //String nameMenuFromJms = menuFromJms.name();
             Log.info("nouvelle comande reçu :"+ exchange.getMessage().getBody());
-            /*
-            List<fr.pantheonsorbonne.ufr27.miage.model.Menu> allMenu = menuDAO.getAllMenu();
-            List<fr.pantheonsorbonne.ufr27.miage.model.Menu> allMenuFiltered =  allMenu.stream()
-                    .filter(menu -> menu.getName().equals(nameMenuFromJms))
-                    .toList();
-            String estimation = allMenuFiltered.isEmpty() ? "indisponible" : estimationService.getRandomEstimation();
-           // String activeProfile = ProfileManager.getActiveProfile();
-            exchange.getMessage().setBody(estimation);
-            exchange.getMessage().setHeader("darkKitchenName",dkDAO.getDKName());
-             */
+            String estimation = estimationService.getRandomEstimation();
+            exchange.getIn().setBody(estimation);
+            Log.info("Estimation calculée: " + estimation);
         }
+
+
     }
 }
