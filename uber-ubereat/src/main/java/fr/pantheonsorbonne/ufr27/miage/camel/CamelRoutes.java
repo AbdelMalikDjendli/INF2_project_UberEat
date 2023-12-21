@@ -10,6 +10,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
@@ -33,7 +34,7 @@ public class CamelRoutes extends RouteBuilder {
 
 
         from("sjms2:topic:M1.DK_ESTIMATION").process(new ChoiceProcessor())
-                .log("Message reçu dans la route 'M1.DK_ESTIMATION': ${body}");
+                .log(LoggingLevel.INFO, "Message reçu dans la route 'M1.DK_ESTIMATION'");
 
     }
 

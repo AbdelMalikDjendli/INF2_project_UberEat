@@ -31,7 +31,7 @@ public class OrderGateway {
             fr.pantheonsorbonne.ufr27.miage.dto.Menu menuDto = new fr.pantheonsorbonne.ufr27.miage.dto.Menu(menuModel.getName(), menuModel.getPrice());
             String orderJson = objectMapper.writeValueAsString(menuDto);
             Message msg =context.createTextMessage(orderJson);
-            context.createProducer().send(context.createTopic("sjms2:topic:M1.DK"), msg);
+            context.createProducer().send(context.createTopic("M1.DK"), msg);
             Log.info("Commande envoyée au topic 'M1.DK': " + orderJson);
 
         } catch (IOException e) {

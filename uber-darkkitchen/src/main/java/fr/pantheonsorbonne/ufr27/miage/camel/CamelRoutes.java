@@ -13,9 +13,12 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.dataformat.JsonLibrary;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.util.List;
+
+import static org.apache.camel.support.DefaultExchangeHolder.unmarshal;
 
 @ApplicationScoped
 public class CamelRoutes extends RouteBuilder {
@@ -30,9 +33,8 @@ public class CamelRoutes extends RouteBuilder {
 
         camelContext.setTracing(true);
 
-        //unmarshal().json(Menu.class)
-
         from("sjms2:topic:M1.DK")
+                //.unmarshal().json(JsonLibrary.Jackson, Menu.class) // Désérialiser le JSON en objet Menu
                 .process(new EstimationProcessor())
                 .to("sjms2:topic:M1.DK_ESTIMATION");
 
