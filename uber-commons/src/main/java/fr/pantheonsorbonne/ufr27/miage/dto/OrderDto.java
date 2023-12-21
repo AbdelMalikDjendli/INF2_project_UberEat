@@ -2,7 +2,7 @@ package fr.pantheonsorbonne.ufr27.miage.dto;
 
 import java.util.List;
 
-public record Order(
+public record OrderDto(
         Integer id,
         String status,
         Double lonCustomerPosition,
@@ -11,8 +11,11 @@ public record Order(
         Double lonDarkKitchenPosition,
         Double latDarkKitchenPosition,
 
-         List<Menu> menuItems
+         List<MenuDto> menuItems
         ) {
+        public int menu_id() {
+                return 0;
+        }
 
 /*
     public double getDistanceBetweenCustomerAndDarkKitchen(double lat1,double lon1,double lat2,double lon2){

@@ -3,7 +3,7 @@ package fr.pantheonsorbonne.ufr27.miage.camel;
 
 import fr.pantheonsorbonne.ufr27.miage.dao.DkDAO;
 import fr.pantheonsorbonne.ufr27.miage.dao.MenuDAO;
-import fr.pantheonsorbonne.ufr27.miage.dto.Menu;
+import fr.pantheonsorbonne.ufr27.miage.dto.MenuDto;
 import fr.pantheonsorbonne.ufr27.miage.service.EstimationService;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -49,7 +49,6 @@ public class CamelRoutes extends RouteBuilder {
 
         @Inject
         EstimationService estimationService;
-
          */
 
 

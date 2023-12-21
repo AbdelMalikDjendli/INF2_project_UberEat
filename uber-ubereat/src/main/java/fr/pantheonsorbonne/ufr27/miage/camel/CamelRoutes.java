@@ -3,7 +3,7 @@ package fr.pantheonsorbonne.ufr27.miage.camel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import fr.pantheonsorbonne.ufr27.miage.dto.Menu;
+import fr.pantheonsorbonne.ufr27.miage.dto.MenuDto;
 import io.quarkus.logging.Log;
 import io.quarkus.runtime.configuration.ProfileManager;
 import jakarta.enterprise.context.ApplicationScoped;

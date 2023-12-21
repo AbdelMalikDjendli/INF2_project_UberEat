@@ -1,7 +1,8 @@
 package fr.pantheonsorbonne.ufr27.miage.resources;
 
 import fr.pantheonsorbonne.ufr27.miage.camel.OrderGateway;
-import fr.pantheonsorbonne.ufr27.miage.dto.Order;
+import fr.pantheonsorbonne.ufr27.miage.dto.OrderDto;
+import fr.pantheonsorbonne.ufr27.miage.model.Order;
 import fr.pantheonsorbonne.ufr27.miage.service.OrderService;
 import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
@@ -13,7 +14,7 @@ import jakarta.ws.rs.core.UriBuilder;
 import java.net.URI;
 
 @Path("orders")
-public class OrderResource {
+public class OrderRessource {
 
     @Inject
     OrderService orderService;
@@ -24,13 +25,13 @@ public class OrderResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createOrder(Order orderDTO) {
+    public Response createOrder(OrderDto orderDTO) {
         Log.info("Création d'une nouvelle commande avec le menu ID: " + orderDTO.menu_id());
-        fr.pantheonsorbonne.ufr27.miage.model.Order createdOrder = orderService.createOrder(orderDTO);
+        Order createdOrder = orderService.createOrder(orderDTO);
 
         // Construire l'URL pour accéder à la commande créée
-        URI orderUri = UriBuilder.fromResource(OrderResource.class)
-                .path(OrderResource.class, "getOrderStatus")
+        URI orderUri = UriBuilder.fromResource(OrderRessource.class)
+                .path(OrderRessource.class, "getOrderStatus")
                 .build(createdOrder.getId());
 
         orderGateway.sendMenuToDarkkitchen(orderDTO.menu_id());
@@ -45,7 +46,7 @@ public class OrderResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public Response getOrderStatus(@PathParam("orderId") Long orderId) {
-        fr.pantheonsorbonne.ufr27.miage.model.Order order = orderService.getOrderById(orderId);
+        Order order = orderService.getOrderById(orderId);
         if (order != null) {
             return Response.ok(order.getStatus()).build();
         } else {

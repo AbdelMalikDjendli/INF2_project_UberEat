@@ -9,7 +9,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "menu_id", referencedColumnName = "id")
     private Menu menu; // Relation avec le menu
 

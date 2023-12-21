@@ -25,5 +25,9 @@ public class MenuDAOImpl implements MenuDAO {
     public List<Menu> getAllMenu() {
         return this.em.createQuery("Select m from Menu m").getResultList();
     }
+
+    public List<Menu> getMenuByName(List<String> menuNames) {
+       return this.em.createQuery("SELECT m FROM Menu m WHERE m.name in :menuNames").setParameter("menuNames",menuNames).getResultList();
+    }
 }
 

@@ -3,6 +3,7 @@ package fr.pantheonsorbonne.ufr27.miage.camel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.pantheonsorbonne.ufr27.miage.dao.MenuDAO;
 import fr.pantheonsorbonne.ufr27.miage.dao.MenuDAOImpl;
+import fr.pantheonsorbonne.ufr27.miage.dto.MenuDto;
 import fr.pantheonsorbonne.ufr27.miage.model.Menu;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -28,9 +29,9 @@ public class OrderGateway {
        ) {
             ObjectMapper objectMapper = new ObjectMapper();
             Menu menuModel = menuDAO.findMenuById(idMenu);
-            fr.pantheonsorbonne.ufr27.miage.dto.Menu menuDto = new fr.pantheonsorbonne.ufr27.miage.dto.Menu(menuModel.getName(), menuModel.getPrice());
+            MenuDto menuDto = new MenuDto(menuModel.getName(), menuModel.getPrice());
             String orderJson = objectMapper.writeValueAsString(menuDto);
-            Message msg =context.createTextMessage(orderJson);
+            Message msg = context.createTextMessage(orderJson);
             context.createProducer().send(context.createTopic("sjms2:topic:M1.DK"), msg);
             Log.info("Commande envoyée au topic 'M1.DK': " + orderJson);
 
