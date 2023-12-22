@@ -1,7 +1,7 @@
 package fr.pantheonsorbonne.ufr27.miage.resources;
 
+import fr.pantheonsorbonne.ufr27.miage.dao.MenuDAO;
 import fr.pantheonsorbonne.ufr27.miage.model.Menu;
-import fr.pantheonsorbonne.ufr27.miage.service.MenuService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -15,16 +15,13 @@ import java.util.List;
 public class MenuRessource {
 
     @Inject
-    MenuService menuService;
+    MenuDAO menuDAO;
 
-    public MenuRessource(MenuService menuService) {
-        this.menuService = menuService;
-    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMenus() {
-        List<Menu> menus = menuService.getAllMenus();
+        List<Menu> menus = menuDAO.getAllMenus();
         return Response.ok(menus).build();
     }
 }
