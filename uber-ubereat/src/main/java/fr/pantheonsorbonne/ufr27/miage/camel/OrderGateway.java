@@ -1,16 +1,12 @@
 package fr.pantheonsorbonne.ufr27.miage.camel;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.pantheonsorbonne.ufr27.miage.dao.MenuDAO;
-import fr.pantheonsorbonne.ufr27.miage.dao.MenuDAOImpl;
-import fr.pantheonsorbonne.ufr27.miage.model.Menu;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.jms.*;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import java.io.IOException;
 
 @ApplicationScoped
 public class OrderGateway {

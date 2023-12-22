@@ -30,10 +30,12 @@ public class DkDAOImpl implements DkDAO {
         return (String) this.em.createQuery("Select d.name from DarkKitchen d").getSingleResult();
     }
 
+    @Transactional
     @Override
-    public int getDKId() {
-        return (int) this.em.createQuery("Select d.id from DarkKitchen d").getSingleResult();
+    public Long getDKId() {
+        return (Long) this.em.createQuery("Select d.id from DarkKitchen d").getSingleResult();
     }
+
 }
 
 
