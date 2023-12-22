@@ -10,6 +10,8 @@ import fr.pantheonsorbonne.ufr27.miage.model.Menu;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 
@@ -23,8 +25,14 @@ public class DkDAOImpl implements DkDAO {
     public DkDAOImpl() {
     }
 
+    @Transactional
     public String getDKName() {
         return (String) this.em.createQuery("Select d.name from DarkKitchen d").getSingleResult();
+    }
+
+    @Override
+    public int getDKId() {
+        return (int) this.em.createQuery("Select d.id from DarkKitchen d").getSingleResult();
     }
 }
 

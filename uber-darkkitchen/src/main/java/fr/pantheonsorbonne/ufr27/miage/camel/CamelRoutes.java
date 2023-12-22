@@ -37,14 +37,17 @@ public class CamelRoutes extends RouteBuilder {
 
 @ApplicationScoped
     private static class EstimationProcessor implements Processor {
-        @Inject
-        EstimationService estimationService;
+    @Inject
+    EstimationService estimationService;
+    @Inject
+    DkDAO dkDAO;
         @Override
         public void process(Exchange exchange) throws Exception {
-            Log.info("nouvelle comande reçu :"+ exchange.getMessage().getBody());
             String estimation = estimationService.getRandomEstimation();
-            exchange.getIn().setBody(estimation);
-            Log.info("Estimation calculée: " + estimation);
+            int darkKitchenId = dkDAO.getDKId();
+            String response = darkKitchenId + ":" + estimation;
+            exchange.getIn().setBody(response);
+            Log.info("Estimation envoyée: " + response);
         }
 
 
