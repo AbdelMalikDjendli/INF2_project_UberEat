@@ -23,20 +23,14 @@ public class OrderGateway {
     @Inject
     MenuDAO menuDAO;
 
-    public void sendMenuToDarkkitchen(int idMenu) {
-        try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)
-       ) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            Menu menuModel = menuDAO.findMenuById(idMenu);
-            fr.pantheonsorbonne.ufr27.miage.dto.Menu menuDto = new fr.pantheonsorbonne.ufr27.miage.dto.Menu(menuModel.getName(), menuModel.getPrice());
-            String orderJson = objectMapper.writeValueAsString(menuDto);
-            Message msg =context.createTextMessage(orderJson);
+    public void sendOrderIdToDarkkitchen(long orderId) {
+        try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
+            TextMessage msg = context.createTextMessage(Long.toString(orderId));
+            msg.setJMSCorrelationID(Long.toString(orderId));
             context.createProducer().send(context.createTopic("M1.DK"), msg);
-            Log.info("Commande envoyée au topic 'M1.DK': " + orderJson);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.error("Erreur lors de l'envoi de la commande: ", e);
+            Log.info("ID de la commande envoyé au topic 'M1.DK': " + orderId);
+        } catch (JMSRuntimeException | JMSException e) {
+            Log.error("Erreur lors de l'envoi de l'ID de la commande: ", e);
         }
     }
 

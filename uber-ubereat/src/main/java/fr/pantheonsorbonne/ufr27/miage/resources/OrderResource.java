@@ -33,7 +33,7 @@ public class OrderResource {
                 .path(OrderResource.class, "getOrderStatus")
                 .build(createdOrder.getId());
 
-        orderGateway.sendMenuToDarkkitchen(orderDTO.menu_id());
+        orderGateway.sendOrderIdToDarkkitchen(createdOrder.getId());
 
         // Renvoyer le code 201 avec l'URL de la commande dans l'en-tête "Location"
         return Response.created(orderUri)
