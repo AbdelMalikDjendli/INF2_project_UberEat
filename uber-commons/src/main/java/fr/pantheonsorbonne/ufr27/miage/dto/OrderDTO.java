@@ -2,16 +2,9 @@ package fr.pantheonsorbonne.ufr27.miage.dto;
 
 import java.util.List;
 
-public record Order(
-        Integer id,
+public record OrderDTO(
         String status,
-        Double lonCustomerPosition,
-        Double latCustomerPosition,
-
-        Double lonDarkKitchenPosition,
-        Double latDarkKitchenPosition,
-
-         List<Menu> menuItems
+        MenuDTO menu
         ) {
 
 /*

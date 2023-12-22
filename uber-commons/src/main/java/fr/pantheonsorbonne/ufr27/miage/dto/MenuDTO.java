@@ -1,5 +1,5 @@
 package fr.pantheonsorbonne.ufr27.miage.dto;
 
-public record Menu(String name, String price) {
+public record MenuDTO(String name) {
 
 }
