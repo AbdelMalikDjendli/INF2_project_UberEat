@@ -6,9 +6,9 @@ public interface DkChoiceService {
     public int getMinEstimation(int estimation);
     public void setMinEstimation(int estimation);
 
-    public void setCurrentDarkKitchen(String name);
+    public void setDkQueue(String name);
 
-    public String getCurrentDarkKitchen();
+    public String getDkQueue();
     String chooseFastestDarkKitchen(List<String> estimations);
 
 }

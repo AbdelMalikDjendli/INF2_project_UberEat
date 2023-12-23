@@ -22,6 +22,9 @@ public class CamelRoutes extends RouteBuilder {
     DkChoiceService dkChoiceService;
 
     @Inject
+    OrderGateway orderGateway;
+
+    @Inject
     CamelContext camelContext;
 
     @Override
@@ -30,27 +33,43 @@ public class CamelRoutes extends RouteBuilder {
         camelContext.setTracing(true);
 
 
-        from("sjms2:topic:M1.DK_ESTIMATION")
-                .process(new ChoiceProcessor(dkChoiceService));
+        from("sjms2:queue:M1.DK_ESTIMATION")
+                .process(new ChoiceProcessor(dkChoiceService,orderGateway));
 
 
     }
 
+    @ApplicationScoped
     private static class ChoiceProcessor implements Processor {
 
         private final DkChoiceService dkChoiceService ;
-        private final List<String> estimations = new ArrayList<>();
-        private ChoiceProcessor(DkChoiceService dkChoiceService) {
+        private final OrderGateway orderGateway;
+
+
+        private int estimation = 1000;
+        private int response = 0;
+
+        public ChoiceProcessor(DkChoiceService dkChoiceService, OrderGateway orderGateway) {
+
             this.dkChoiceService = dkChoiceService;
+            this.orderGateway = orderGateway;
         }
 
         @Override
         public void process(Exchange exchange) throws Exception {
-            estimations.add(exchange.getIn().getBody(String.class));
-            String fastestDK = dkChoiceService.chooseFastestDarkKitchen(estimations);
-            exchange.getIn().setBody(fastestDK);
-            Log.info("La Dark Kitchen la plus rapide sélectionnée : " + fastestDK);
-            estimations.clear();
+            int newEstimation = Integer.parseInt(exchange.getIn().getBody(String.class));
+            response = response + 1;
+            if(newEstimation<estimation){
+                estimation = newEstimation;
+                dkChoiceService.setDkQueue(exchange.getMessage().getHeader("dk", String.class));
+            }
+
+            if(response==1){
+                orderGateway.sendConfirmationToDarkkitchen(dkChoiceService.getDkQueue());
+                Log.info("Confirmation envoyé à :"+ dkChoiceService.getDkQueue());
+            }
+
+
         }
     }
 }

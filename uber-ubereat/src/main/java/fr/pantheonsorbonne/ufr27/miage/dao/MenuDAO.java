@@ -9,7 +9,7 @@ import fr.pantheonsorbonne.ufr27.miage.model.Menu;
 import java.util.List;
 
 public interface MenuDAO {
-    Menu findMenuById(int id);
+    Menu findMenuById(long id);
     List<Menu> getAllMenus();
 }
 

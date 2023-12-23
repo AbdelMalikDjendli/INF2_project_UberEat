@@ -13,16 +13,6 @@ public class Order {
     @JoinColumn(name = "menu_id", referencedColumnName = "id")
     private Menu menu; // Relation avec le menu
 
-    @Column(name = "status")
-    private String status = "recherche d'un restaurant";  // Statut de la commande
-
-
-    @ManyToOne
-    @JoinColumn(name = "dk_id", referencedColumnName = "id")
-    private DarkKitchen darkKitchen;  // Statut de la commande
-
-
-
     public Long getId() {
         return id;
     }
@@ -39,15 +29,4 @@ public class Order {
         this.menu = menu;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public void setDarkKitchen(DarkKitchen darkKitchen) {
-        this.darkKitchen = darkKitchen;
-    }
 }

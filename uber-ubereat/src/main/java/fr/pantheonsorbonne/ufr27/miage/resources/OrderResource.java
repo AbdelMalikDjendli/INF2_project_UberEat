@@ -1,5 +1,6 @@
 package fr.pantheonsorbonne.ufr27.miage.resources;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import fr.pantheonsorbonne.ufr27.miage.camel.OrderGateway;
 import fr.pantheonsorbonne.ufr27.miage.dto.Order;
 import fr.pantheonsorbonne.ufr27.miage.service.OrderService;
@@ -24,7 +25,7 @@ public class OrderResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createOrder(Order orderDTO) {
+    public Response createOrder(Order orderDTO) throws JsonProcessingException {
         Log.info("Création d'une nouvelle commande avec le menu ID: " + orderDTO.menu_id());
         fr.pantheonsorbonne.ufr27.miage.model.Order createdOrder = orderService.createOrder(orderDTO);
 
@@ -33,7 +34,7 @@ public class OrderResource {
                 .path(OrderResource.class, "getOrderStatus")
                 .build(createdOrder.getId());
 
-        orderGateway.sendOrderIdToDarkkitchen(createdOrder.getId());
+        orderGateway.sendOrderToDarkkitchen(createdOrder.getId());
 
         // Renvoyer le code 201 avec l'URL de la commande dans l'en-tête "Location"
         return Response.created(orderUri)

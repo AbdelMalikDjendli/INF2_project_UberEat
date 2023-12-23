@@ -10,5 +10,7 @@ import java.util.List;
 
 public interface MenuDAO {
     List<Menu> getAllMenu();
+
+    Menu findMenuByName(String name);
 }
 

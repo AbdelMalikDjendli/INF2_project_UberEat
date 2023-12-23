@@ -8,7 +8,7 @@ import java.util.List;
 public class DkChoiceServiceImpl implements DkChoiceService {
 
     private int currentEstimation = 100;
-    private String currentDarkKitchen;
+    private String dkQueue;
 
     @Override
     public void setMinEstimation(int estimation) {
@@ -45,8 +45,8 @@ public class DkChoiceServiceImpl implements DkChoiceService {
     }
 
     @Override
-    public void setCurrentDarkKitchen(String name) {
-        this.currentDarkKitchen = name;
+    public void setDkQueue(String name) {
+        this.dkQueue = name;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class DkChoiceServiceImpl implements DkChoiceService {
     }
 
     @Override
-    public String getCurrentDarkKitchen() {
-        return this.currentDarkKitchen;
+    public String getDkQueue() {
+        return this.dkQueue;
     }
 }
