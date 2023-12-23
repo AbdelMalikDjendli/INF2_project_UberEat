@@ -18,7 +18,7 @@ public class Order {
 
 
     @ManyToOne
-    @JoinColumn(name = "dk_id", referencedColumnName = "id")
+    @JoinColumn(name = "dk_id", referencedColumnName = "id",nullable = true)
     private DarkKitchen darkKitchen;  // Statut de la commande
 
 

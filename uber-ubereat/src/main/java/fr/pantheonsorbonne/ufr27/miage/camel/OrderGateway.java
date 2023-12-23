@@ -9,6 +9,7 @@ import fr.pantheonsorbonne.ufr27.miage.dto.MenuDTO;
 import fr.pantheonsorbonne.ufr27.miage.dto.OrderDTO;
 import fr.pantheonsorbonne.ufr27.miage.model.Menu;
 import fr.pantheonsorbonne.ufr27.miage.model.Order;
+import fr.pantheonsorbonne.ufr27.miage.service.OrderService;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -25,43 +26,38 @@ public class OrderGateway {
     ConnectionFactory connectionFactory;
 
     @Inject
-    MenuDAO menuDAO;
-
-    @Inject
-    OrderDAO orderDAO;
-
-    @Inject
-    DkDAO dkDAO;
+    OrderService orderService;
 
     public void sendOrderToDarkkitchen(long orderId) throws JsonProcessingException {
-        Order orderModel = orderDAO.findOrderById(orderId);
-        MenuDTO menuDto = new MenuDTO(orderModel.getMenu().getName(), orderModel.getMenu().getDescription());
-        OrderDTO orderDTO = new OrderDTO(orderModel.getStatus(), menuDto);
+        OrderDTO orderDTO = orderService.getOrderDTOFromModel(orderId);
+        //On convertit l'orderDTO en json
         ObjectMapper objectMapper = new ObjectMapper();
         String orderJson = objectMapper.writeValueAsString(orderDTO);
+
         try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
+            //On créer un message contenant l'orderDTO sous forme de json
             TextMessage msg = context.createTextMessage(orderJson);
-            //msg.setJMSCorrelationID(Long.toString(menuId));
+            //On envoie l'order aux darkKitchen via le topic M1.DK
             context.createProducer().send(context.createTopic("M1.DK"), msg);
-            Log.info("ID de la commande envoyé au topic 'M1.DK': " + orderModel.getId());
+            Log.info("Nouvelle commande disponible (recherche de darkKitchen): " + orderDTO.menu().name());
         } catch (JMSRuntimeException e) {
-            Log.error("Erreur lors de l'envoi de l'ID de la commande: ", e);
+            Log.error("Erreur lors de l'envoi de la commande aux darkkitchen: ", e);
         }
     }
 
     public void sendConfirmationToDarkkitchen(String dkName) throws JsonProcessingException {
-        Order orderModel = orderDAO.getLastOrder();
-        orderDAO.updateStatus(orderModel.getId(),"en cours de préparation");
-        orderDAO.addDarkKitchen(orderModel.getId(),dkDAO.findDKByName(dkName));
-        MenuDTO menuDto = new MenuDTO(orderModel.getMenu().getName(), orderModel.getMenu().getDescription());
-        OrderDTO orderDTO = new OrderDTO(orderModel.getStatus(), menuDto);
+        //On récupère la commande
+        Order orderModel = orderService.dkFoundUpdate(dkName);
+        //On convertit l'order en orderDTO
+        OrderDTO orderDTO = orderService.getOrderDTOFromModel(orderModel.getId());
+        //On convertit l'orderDTO en Json
         ObjectMapper objectMapper = new ObjectMapper();
         String orderJson = objectMapper.writeValueAsString(orderDTO);
         try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
+            //On envoie la commande à la darkkitchen choisi en guise de confirmation
             TextMessage msg = context.createTextMessage(orderJson);
-            //msg.setJMSCorrelationID(Long.toString(menuId));
             context.createProducer().send(context.createQueue("M1."+dkName), msg);
-            Log.info("ID de la confirmation a été envoyé à ': " + dkName);
+            Log.info("La darkkitchen choisi est :"+ dkName);
         } catch (JMSRuntimeException e) {
             Log.error("Erreur lors de l'envoi de la confirmation: ", e);
         }

@@ -18,14 +18,12 @@ import java.util.List;
 @ApplicationScoped
 public class CamelRoutes extends RouteBuilder {
 
-    @Inject
-    DkChoiceService dkChoiceService;
-
-    @Inject
-    OrderGateway orderGateway;
 
     @Inject
     CamelContext camelContext;
+
+    @Inject
+    ChoiceProcessor choiceProcessor;
 
     @Override
     public void configure() throws Exception {
@@ -34,7 +32,7 @@ public class CamelRoutes extends RouteBuilder {
 
 
         from("sjms2:queue:M1.DK_ESTIMATION")
-                .process(new ChoiceProcessor(dkChoiceService,orderGateway));
+                .process(choiceProcessor);
 
 
     }
@@ -42,34 +40,32 @@ public class CamelRoutes extends RouteBuilder {
     @ApplicationScoped
     private static class ChoiceProcessor implements Processor {
 
-        private final DkChoiceService dkChoiceService ;
-        private final OrderGateway orderGateway;
+        @Inject
+        DkChoiceService dkChoiceService;
 
+        @Inject
+        OrderGateway orderGateway;
 
-        private int estimation = 1000;
-        private int response = 0;
-
-        public ChoiceProcessor(DkChoiceService dkChoiceService, OrderGateway orderGateway) {
-
-            this.dkChoiceService = dkChoiceService;
-            this.orderGateway = orderGateway;
-        }
 
         @Override
         public void process(Exchange exchange) throws Exception {
-            int newEstimation = Integer.parseInt(exchange.getIn().getBody(String.class));
-            response = response + 1;
-            if(newEstimation<estimation){
-                estimation = newEstimation;
-                dkChoiceService.setDkQueue(exchange.getMessage().getHeader("dk", String.class));
+            String body = exchange.getIn().getBody(String.class);
+            //Une incrémente le nombre d'estimation reçu
+            dkChoiceService.setNumberOfEstimation();
+            int newEstimation;
+            if(!body.equals("indisponible")){
+                newEstimation = Integer.parseInt(body);
+                //Si l'estimation reçu est plus courte que la précédente alors la stock dans estimation
+                //et on stock le nom de la darkkitchen
+                if(newEstimation<dkChoiceService.getMinEstimation()){
+                    dkChoiceService.setMinEstimation(newEstimation);
+                    dkChoiceService.setDkQueue(exchange.getMessage().getHeader("dk", String.class));
+                }
             }
-
-            if(response==1){
+            //Si toutes les darkkitchen ont répondu alors on envoi la confirmation à la darkkitchen choisi
+            if(dkChoiceService.getNumberOfEstimation()==1){
                 orderGateway.sendConfirmationToDarkkitchen(dkChoiceService.getDkQueue());
-                Log.info("Confirmation envoyé à :"+ dkChoiceService.getDkQueue());
             }
-
-
         }
     }
 }

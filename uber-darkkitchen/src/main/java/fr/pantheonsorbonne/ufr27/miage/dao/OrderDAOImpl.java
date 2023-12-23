@@ -8,11 +8,12 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
 @ApplicationScoped
-public class OrderDAOImpl implements OrderDAO{
+public class OrderDAOImpl implements OrderDAO {
     @PersistenceContext(
             name = "mysql"
     )
     EntityManager em;
+
     @Override
     @Transactional
     public void newOrder(Menu menu) {

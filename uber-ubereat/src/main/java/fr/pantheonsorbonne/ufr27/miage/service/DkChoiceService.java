@@ -3,12 +3,15 @@ package fr.pantheonsorbonne.ufr27.miage.service;
 import java.util.List;
 
 public interface DkChoiceService {
-    public int getMinEstimation(int estimation);
+    public int getMinEstimation();
     public void setMinEstimation(int estimation);
+
+    void setNumberOfEstimation();
 
     public void setDkQueue(String name);
 
     public String getDkQueue();
-    String chooseFastestDarkKitchen(List<String> estimations);
+
+    int getNumberOfEstimation();
 
 }

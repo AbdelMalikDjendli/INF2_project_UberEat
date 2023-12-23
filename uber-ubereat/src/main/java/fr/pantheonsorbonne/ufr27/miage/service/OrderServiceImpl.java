@@ -1,9 +1,15 @@
 package fr.pantheonsorbonne.ufr27.miage.service;
 
+import fr.pantheonsorbonne.ufr27.miage.dao.DkDAO;
+import fr.pantheonsorbonne.ufr27.miage.dao.MenuDAO;
+import fr.pantheonsorbonne.ufr27.miage.dao.OrderDAO;
+import fr.pantheonsorbonne.ufr27.miage.dto.MenuDTO;
+import fr.pantheonsorbonne.ufr27.miage.dto.OrderDTO;
 import fr.pantheonsorbonne.ufr27.miage.model.Menu;
 import fr.pantheonsorbonne.ufr27.miage.model.Order;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -14,23 +20,50 @@ public class OrderServiceImpl implements OrderService{
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Inject
+    MenuDAO menuDAO;
+
+    @Inject
+    OrderDAO orderDAO;
+
+    @Inject
+    DkDAO dkDAO;
+
     @Override
     @Transactional
     public Order createOrder(fr.pantheonsorbonne.ufr27.miage.dto.Order dtoOrder) {
-        Log.info("Début de la création de la commande avec le menu ID: " + dtoOrder.menu_id());
         Order newOrder = new Order();
-
         // Récupérer et associer l'entité Menu à l'Order
         Menu menu = entityManager.find(Menu.class, (long) dtoOrder.menu_id());
         newOrder.setMenu(menu);
-
-        // Le statut est déjà initialisé par défaut dans l'entité Order
+        newOrder.setStatus("En recherche de restaurant");
         entityManager.persist(newOrder);
         return newOrder;
     }
 
+    /*
+        Convertit un model Order en OrderDTO
+     */
     @Override
-    public Order getOrderById(Long orderId) {
-        return entityManager.find(Order.class, orderId);
+    @Transactional
+    public OrderDTO getOrderDTOFromModel(long orderId){
+        Order orderModel = orderDAO.findOrderById(orderId);
+        MenuDTO menuDto = new MenuDTO(orderModel.getMenu().getName(), orderModel.getMenu().getDescription());
+        return new OrderDTO(orderModel.getStatus(), menuDto);
     }
+
+    /*
+    Met à jour le status et la darkkitchen d'une commande une fois que la darkkitchen a été choisie
+    et retourne la commande
+     */
+    @Override
+    @Transactional
+    public Order dkFoundUpdate(String dkName){
+        Order orderModel = orderDAO.getLastOrder();
+        orderDAO.updateStatus(orderModel.getId(),"en cours de préparation");
+        orderDAO.addDarkKitchen(orderModel.getId(),dkDAO.findDKByName(dkName));
+        return orderModel;
+    }
+
+
 }

@@ -2,7 +2,9 @@ package fr.pantheonsorbonne.ufr27.miage.resources;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import fr.pantheonsorbonne.ufr27.miage.camel.OrderGateway;
-import fr.pantheonsorbonne.ufr27.miage.dto.Order;
+import fr.pantheonsorbonne.ufr27.miage.dao.OrderDAO;
+import fr.pantheonsorbonne.ufr27.miage.dto.OrderDTO;
+import fr.pantheonsorbonne.ufr27.miage.model.Order;
 import fr.pantheonsorbonne.ufr27.miage.service.OrderService;
 import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
@@ -22,10 +24,13 @@ public class OrderResource {
     @Inject
     OrderGateway orderGateway;
 
+    @Inject
+    OrderDAO orderDAO;
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createOrder(Order orderDTO) throws JsonProcessingException {
+    public Response createOrder(fr.pantheonsorbonne.ufr27.miage.dto.Order orderDTO) throws JsonProcessingException {
         Log.info("Création d'une nouvelle commande avec le menu ID: " + orderDTO.menu_id());
         fr.pantheonsorbonne.ufr27.miage.model.Order createdOrder = orderService.createOrder(orderDTO);
 
@@ -46,7 +51,7 @@ public class OrderResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public Response getOrderStatus(@PathParam("orderId") Long orderId) {
-        fr.pantheonsorbonne.ufr27.miage.model.Order order = orderService.getOrderById(orderId);
+        Order order = orderDAO.findOrderById(orderId);
         if (order != null) {
             return Response.ok(order.getStatus()).build();
         } else {

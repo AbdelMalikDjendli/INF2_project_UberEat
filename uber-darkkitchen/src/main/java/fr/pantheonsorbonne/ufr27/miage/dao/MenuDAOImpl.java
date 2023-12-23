@@ -5,7 +5,6 @@ package fr.pantheonsorbonne.ufr27.miage.dao;
 // (powered by FernFlower decompiler)
 //
 
-import fr.pantheonsorbonne.ufr27.miage.model.DarkKitchen;
 import fr.pantheonsorbonne.ufr27.miage.model.Menu;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
@@ -21,9 +20,6 @@ public class MenuDAOImpl implements MenuDAO {
     )
     EntityManager em;
 
-    public MenuDAOImpl() {
-    }
-
     @Override
     @Transactional
     public List<Menu> getAllMenu() {
@@ -33,7 +29,7 @@ public class MenuDAOImpl implements MenuDAO {
     @Override
     @Transactional
     public Menu findMenuByName(String name) {
-        return (Menu) this.em.createQuery("Select m from Menu m where m.name =: name").setParameter("name",name).getSingleResult();
+        return (Menu) this.em.createQuery("Select m from Menu m where m.name =: name").setParameter("name", name).getSingleResult();
 
     }
 }

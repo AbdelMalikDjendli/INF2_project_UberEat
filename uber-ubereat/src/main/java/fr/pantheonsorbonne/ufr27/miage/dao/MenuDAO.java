@@ -11,6 +11,7 @@ import java.util.List;
 public interface MenuDAO {
     Menu findMenuById(long id);
     List<Menu> getAllMenus();
+    Menu findMenuByName(String name);
 }
 
 

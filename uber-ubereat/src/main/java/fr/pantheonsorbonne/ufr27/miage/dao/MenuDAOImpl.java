@@ -23,7 +23,13 @@ public class MenuDAOImpl implements MenuDAO {
     }
 
     public Menu findMenuById(long id) {
-        return (Menu) this.em.createQuery("Select m from Menu m where m.id =: id").setParameter("id",id).getSingleResult();
+        return em.find(Menu.class, id);
+    }
+
+    @Override
+    @Transactional
+    public Menu findMenuByName(String name) {
+        return (Menu) this.em.createQuery("Select m from Menu m where m.name =: name").setParameter("name", name).getSingleResult();
 
     }
 

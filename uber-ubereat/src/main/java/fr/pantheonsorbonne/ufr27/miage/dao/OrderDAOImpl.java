@@ -1,7 +1,6 @@
 package fr.pantheonsorbonne.ufr27.miage.dao;
 
 import fr.pantheonsorbonne.ufr27.miage.model.DarkKitchen;
-import fr.pantheonsorbonne.ufr27.miage.model.Menu;
 import fr.pantheonsorbonne.ufr27.miage.model.Order;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
@@ -9,15 +8,16 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
 @ApplicationScoped
-public class OrderDAOImpl implements OrderDAO{
+public class OrderDAOImpl implements OrderDAO {
     @PersistenceContext(
             name = "mysql"
     )
     EntityManager em;
+
     @Override
     @Transactional
     public Order findOrderById(long id) {
-        return (Order) this.em.createQuery("Select o from Order o where o.id =: id").setParameter("id",id).getSingleResult();
+        return em.find(Order.class, id);
     }
 
     @Override
@@ -26,6 +26,7 @@ public class OrderDAOImpl implements OrderDAO{
         Order o = em.find(Order.class, orderId);
         o.setStatus(status);
     }
+
     @Override
     @Transactional
     public void addDarkKitchen(long orderId, DarkKitchen dk) {
@@ -35,7 +36,7 @@ public class OrderDAOImpl implements OrderDAO{
 
     @Override
     @Transactional
-    public Order getLastOrder(){
+    public Order getLastOrder() {
         return (Order) this.em.createQuery("Select o from Order o").getSingleResult();
     }
 }
