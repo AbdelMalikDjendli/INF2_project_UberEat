@@ -31,10 +31,11 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     @Transactional
-    public Order createOrder(fr.pantheonsorbonne.ufr27.miage.dto.Order dtoOrder) {
+    public Order createOrder(OrderDTO dtoOrder) {
         Order newOrder = new Order();
         // Récupérer et associer l'entité Menu à l'Order
-        Menu menu = entityManager.find(Menu.class, (long) dtoOrder.menu_id());
+        //Menu menu = entityManager.find(Menu.class, (long) dtoOrder.menu_id());
+        Menu menu = menuDAO.findMenuByName(dtoOrder.menu().name());
         newOrder.setMenu(menu);
         newOrder.setStatus("En recherche de restaurant");
         entityManager.persist(newOrder);

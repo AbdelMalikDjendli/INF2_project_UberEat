@@ -34,7 +34,8 @@ public class CamelRoutes extends RouteBuilder {
 
         from("sjms2:queue:M1." + dkService.getCurrentDkName()).unmarshal().json(OrderDTO.class).process(exchange -> {
             orderService.createOrder(exchange.getIn().getBody(OrderDTO.class).menu().name());
-        }).log("Commande en préparation");
+            Log.info("Commande en préparation");
+        });
 
     }
 

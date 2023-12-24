@@ -2,13 +2,11 @@ package fr.pantheonsorbonne.ufr27.miage.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 
-import java.util.List;
-
 @ApplicationScoped
 public class DkChoiceServiceImpl implements DkChoiceService {
 
     private int currentEstimation = 100;
-    private String dkQueue;
+    private String dkName;
     private int numberOfEstimation = 0;
 
     @Override
@@ -21,8 +19,8 @@ public class DkChoiceServiceImpl implements DkChoiceService {
      }
 
     @Override
-    public void setDkQueue(String name) {
-        this.dkQueue = name;
+    public void setDkName(String name) {
+        this.dkName = name;
     }
 
     @Override
@@ -36,8 +34,8 @@ public class DkChoiceServiceImpl implements DkChoiceService {
     }
 
     @Override
-    public String getDkQueue() {
-        return this.dkQueue;
+    public String getDkName() {
+        return this.dkName;
     }
 
 }

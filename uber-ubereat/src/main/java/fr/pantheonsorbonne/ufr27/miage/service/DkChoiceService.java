@@ -8,9 +8,9 @@ public interface DkChoiceService {
 
     void setNumberOfEstimation();
 
-    public void setDkQueue(String name);
+    public void setDkName(String name);
 
-    public String getDkQueue();
+    public String getDkName();
 
     int getNumberOfEstimation();
 

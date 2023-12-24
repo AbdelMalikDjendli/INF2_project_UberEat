@@ -30,9 +30,8 @@ public class OrderResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createOrder(fr.pantheonsorbonne.ufr27.miage.dto.Order orderDTO) throws JsonProcessingException {
-        Log.info("Création d'une nouvelle commande avec le menu ID: " + orderDTO.menu_id());
-        fr.pantheonsorbonne.ufr27.miage.model.Order createdOrder = orderService.createOrder(orderDTO);
+    public Response createOrder(OrderDTO orderDTO) throws JsonProcessingException {
+        Order createdOrder = orderService.createOrder(orderDTO);
 
         // Construire l'URL pour accéder à la commande créée
         URI orderUri = UriBuilder.fromResource(OrderResource.class)

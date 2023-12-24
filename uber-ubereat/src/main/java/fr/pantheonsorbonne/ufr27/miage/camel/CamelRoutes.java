@@ -2,7 +2,6 @@ package fr.pantheonsorbonne.ufr27.miage.camel;
 
 
 import fr.pantheonsorbonne.ufr27.miage.service.DkChoiceService;
-import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.apache.camel.CamelContext;
@@ -10,14 +9,8 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 
-
-import java.io.Console;
-import java.util.ArrayList;
-import java.util.List;
-
 @ApplicationScoped
 public class CamelRoutes extends RouteBuilder {
-
 
     @Inject
     CamelContext camelContext;
@@ -59,12 +52,12 @@ public class CamelRoutes extends RouteBuilder {
                 //et on stock le nom de la darkkitchen
                 if(newEstimation<dkChoiceService.getMinEstimation()){
                     dkChoiceService.setMinEstimation(newEstimation);
-                    dkChoiceService.setDkQueue(exchange.getMessage().getHeader("dk", String.class));
+                    dkChoiceService.setDkName(exchange.getMessage().getHeader("dk", String.class));
                 }
             }
             //Si toutes les darkkitchen ont répondu alors on envoi la confirmation à la darkkitchen choisi
             if(dkChoiceService.getNumberOfEstimation()==1){
-                orderGateway.sendConfirmationToDarkkitchen(dkChoiceService.getDkQueue());
+                orderGateway.sendConfirmationToDarkkitchen(dkChoiceService.getDkName());
             }
         }
     }
