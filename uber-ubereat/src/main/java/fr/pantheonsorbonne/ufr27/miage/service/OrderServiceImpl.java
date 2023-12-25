@@ -15,7 +15,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
 @ApplicationScoped
-public class OrderServiceImpl implements OrderService{
+public class OrderServiceImpl implements OrderService {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -47,10 +47,10 @@ public class OrderServiceImpl implements OrderService{
      */
     @Override
     @Transactional
-    public OrderDTO getOrderDTOFromModel(long orderId){
+    public OrderDTO getOrderDTOFromModel(long orderId) {
         Order orderModel = orderDAO.findOrderById(orderId);
         MenuDTO menuDto = new MenuDTO(orderModel.getMenu().getName(), orderModel.getMenu().getDescription());
-        return new OrderDTO(orderModel.getStatus(), menuDto);
+        return new OrderDTO(orderId, orderModel.getStatus(), menuDto);
     }
 
     /*
@@ -59,12 +59,23 @@ public class OrderServiceImpl implements OrderService{
      */
     @Override
     @Transactional
-    public Order dkFoundUpdate(String dkName){
+    public Order dkFoundUpdate(String dkName) {
         Order orderModel = orderDAO.getLastOrder();
-        orderDAO.updateStatus(orderModel.getId(),"en cours de préparation");
-        orderDAO.addDarkKitchen(orderModel.getId(),dkDAO.findDKByName(dkName));
+        orderDAO.updateStatus(orderModel.getId(), "en cours de préparation");
+        orderDAO.addDarkKitchen(orderModel.getId(), dkDAO.findDKByName(dkName));
         return orderModel;
     }
 
+
+
+    @Override
+    @Transactional
+    public void updateOrderStatusToReady(long orderId) {
+        Order orderModel = orderDAO.findOrderById(orderId);
+
+        orderDAO.updateStatus(orderModel.getId(), "Commande prête ~ recherche d'un livreur");
+
+
+    }
 
 }

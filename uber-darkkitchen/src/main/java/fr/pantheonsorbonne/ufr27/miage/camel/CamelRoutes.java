@@ -26,16 +26,27 @@ public class CamelRoutes extends RouteBuilder {
     @Inject
     DkService dkService;
 
+    @Inject
+    OrderGateway orderGatway;
+
+
+
     @Override
     public void configure() throws Exception {
+
+        //envoyer estimation
         from("sjms2:topic:M1.DK").unmarshal().json(OrderDTO.class)
                 .process(estimationProcessor)
                 .to("sjms2:queue:M1.DK_ESTIMATION");
 
+        //confirmation + création de la commande
         from("sjms2:queue:M1." + dkService.getCurrentDkName()).unmarshal().json(OrderDTO.class).process(exchange -> {
             orderService.createOrder(exchange.getIn().getBody(OrderDTO.class).menu().name());
             Log.info("Commande en préparation");
+            // Après la préparation, envoyer un message indiquant que la commande est prête
+            orderGatway.sendOrderReadyMessage(exchange.getIn().getBody(OrderDTO.class).id());
         });
+
 
     }
 

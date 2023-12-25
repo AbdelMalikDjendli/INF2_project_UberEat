@@ -19,8 +19,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped
 public class OrderGateway {
-    @ConfigProperty(name = "fr.pantheonsorbonne.ufr27.miage.jmsPrefix")
-    String jmsPrefix;
+
 
     @Inject
     ConnectionFactory connectionFactory;
@@ -60,6 +59,20 @@ public class OrderGateway {
             Log.info("La darkkitchen choisi est :"+ dkName);
         } catch (JMSRuntimeException e) {
             Log.error("Erreur lors de l'envoi de la confirmation: ", e);
+        }
+    }
+
+    public void receiveOrderReadyFromDarkKitchen() {
+        try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
+            JMSConsumer consumer = context.createConsumer(context.createQueue("M1.DK_READY"));
+            Message message = consumer.receive();
+            if (message instanceof TextMessage) {
+                //String orderId = ((TextMessage) message).getText();
+                // Logique pour trouver un livreur
+                //findDeliveryPerson(orderId);
+            }
+        } catch (JMSRuntimeException e) {
+            Log.error("Erreur lors de la réception du message de la Dark Kitchen: ", e);
         }
     }
 

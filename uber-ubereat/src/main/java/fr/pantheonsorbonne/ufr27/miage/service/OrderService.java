@@ -7,4 +7,9 @@ public interface OrderService {
     Order createOrder(OrderDTO orderDTO);
     OrderDTO getOrderDTOFromModel(long orderId);
     Order dkFoundUpdate(String dkName);
+
+
+    void updateOrderStatusToReady(long orderId);
+
+
 }
