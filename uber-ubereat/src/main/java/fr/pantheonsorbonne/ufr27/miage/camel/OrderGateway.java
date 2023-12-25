@@ -16,6 +16,8 @@ import jakarta.inject.Inject;
 import jakarta.jms.*;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import java.util.Random;
+
 
 @ApplicationScoped
 public class OrderGateway {
@@ -57,8 +59,23 @@ public class OrderGateway {
             TextMessage msg = context.createTextMessage(orderJson);
             context.createProducer().send(context.createQueue("M1."+dkName), msg);
             Log.info("La darkkitchen choisi est :"+ dkName);
+            sendOrderToDeliveryMen(orderModel.getId(),dkName);
         } catch (JMSRuntimeException e) {
             Log.error("Erreur lors de l'envoi de la confirmation: ", e);
+        }
+    }
+
+    public void sendOrderToDeliveryMen(long orderId, String dkName) {
+        Random random = new Random();
+        int randomDistance = random.nextInt(20);
+
+        try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
+            TextMessage message = context.createTextMessage(Long.toString(orderId));
+            message.setStringProperty("distance", Integer.toString(randomDistance));
+            context.createProducer().send(context.createTopic("M1.DELIVERY"), message);
+            Log.info("Commande envoyée aux livreurs. distance : " + randomDistance + " km");
+        } catch (JMSRuntimeException | JMSException e) {
+            Log.error("Erreur lors de l'envoi de la commande aux livreurs: ", e);
         }
     }
 

@@ -48,8 +48,7 @@ public class CamelRoutes extends RouteBuilder {
 
         @Override
         public void process(Exchange exchange) throws Exception {
-            //remettre à 0
-            dkChoiceService.resetEstimations();
+
             String body = exchange.getIn().getBody(String.class);
             //Une incrémente le nombre d'estimation reçu
             dkChoiceService.setNumberOfEstimation();
@@ -66,6 +65,8 @@ public class CamelRoutes extends RouteBuilder {
             //Si toutes les darkkitchen ont répondu alors on envoi la confirmation à la darkkitchen choisi
             if(dkChoiceService.getNumberOfEstimation()==1){
                 orderGateway.sendConfirmationToDarkkitchen(dkChoiceService.getDkName());
+                //remettre à 0
+                dkChoiceService.resetEstimations();
             }
         }
     }

@@ -20,5 +20,24 @@ public class CamelRoutes extends RouteBuilder {
     public void configure() throws Exception {
 
         camelContext.setTracing(true);
+
+        from("sjms2:topic:M1.DELIVERY")
+                .choice()
+                .when(header("distance").isLessThanOrEqualTo(10))
+                .to("direct:assignBikeDelivery")
+                .when(header("distance").isGreaterThan(10))
+                .to("direct:assignScooterDelivery")
+                .otherwise()
+                .log("Aucun livreur disponible pour cette distance");
+
+        from("direct:assignBikeDelivery")
+                .log("Attribution de la livraison à un coursier à vélo pour une commande à ${header.distance} km de distance");
+        // Plus de logique pour assigner le livreur à vélo
+
+        from("direct:assignScooterDelivery")
+                .log("Attribution de la livraison à un coursier en scooter pour une commande à ${header.distance} km de distance");
+        // Plus de logique pour assigner le livreur en scooter
+
+
     }
 }

@@ -12,15 +12,5 @@ public class DeliveryManDAOImpl implements DeliveryManDAO {
     @PersistenceContext(name = "mysql")
     EntityManager em;
 
-    @Override
-    @Transactional
-    public DeliveryMan createNewDeliveryMan(String name, String vehicleType, double latPosition, double lonPosition){
-        DeliveryMan d = new DeliveryMan();
-        d.setName(name);
-        d.setVehicleType(vehicleType);
-        d.setLatPosition(latPosition);
-        d.setLonPosition(lonPosition);
-        em.persist(d);
-        return d;
-    }
+
 }

@@ -19,7 +19,11 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "dk_id", referencedColumnName = "id",nullable = true)
-    private DarkKitchen darkKitchen;  // Statut de la commande
+    private DarkKitchen darkKitchen;
+
+    @ManyToOne
+    @JoinColumn(name = "dm_id", referencedColumnName = "id",nullable = true)
+    private DeliveryMan deliveryMan;
 
 
 

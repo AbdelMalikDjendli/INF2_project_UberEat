@@ -12,14 +12,11 @@ public class DeliveryMan {
     @Column(name = "name", nullable = false, length = 45)
     private String name;
 
-    @Column(name = "vehicleType", nullable = false, length = 45)
+    @Column(name = "vehiculeType", nullable = false, length = 45)
     private String vehicleType;
 
-    @Column(name = "latPosition", nullable = false, length = 45)
-    private double latPosition;
-
-    @Column(name = "lonPosition", nullable = false, length = 45)
-    private double lonPosition;
+    @Column(name = "is_available")
+    private boolean isAvailable=false;
 
     public DeliveryMan() {
     }
@@ -49,19 +46,13 @@ public class DeliveryMan {
         this.vehicleType = vehicleType;
     }
 
-    public double getLatPosition() {
-        return latPosition;
+    public boolean getIsAvailable() {
+        return isAvailable;
     }
 
-    public void setLatPosition(double latPosition) {
-        this.latPosition = latPosition;
+    public void setIsAvailable(boolean isAvailable) {
+        this.isAvailable = isAvailable;
     }
 
-    public double getLonPosition() {
-        return lonPosition;
-    }
 
-    public void setLonPosition(double lonPosition) {
-        this.lonPosition = lonPosition;
-    }
 }
