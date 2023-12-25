@@ -2,6 +2,9 @@ package fr.pantheonsorbonne.ufr27.miage.camel;
 
 
 import fr.pantheonsorbonne.ufr27.miage.service.DkChoiceService;
+import fr.pantheonsorbonne.ufr27.miage.service.OrderService;
+import fr.pantheonsorbonne.ufr27.miage.service.OrderServiceImpl;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.apache.camel.CamelContext;
@@ -21,11 +24,14 @@ public class CamelRoutes extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
+
+
         camelContext.setTracing(true);
 
 
         from("sjms2:queue:M1.DK_ESTIMATION")
                 .process(choiceProcessor);
+
 
 
     }
@@ -42,6 +48,8 @@ public class CamelRoutes extends RouteBuilder {
 
         @Override
         public void process(Exchange exchange) throws Exception {
+            //remettre à 0
+            dkChoiceService.resetEstimations();
             String body = exchange.getIn().getBody(String.class);
             //Une incrémente le nombre d'estimation reçu
             dkChoiceService.setNumberOfEstimation();

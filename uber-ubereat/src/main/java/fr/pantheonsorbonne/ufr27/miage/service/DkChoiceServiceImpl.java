@@ -38,4 +38,10 @@ public class DkChoiceServiceImpl implements DkChoiceService {
         return this.dkName;
     }
 
+    @Override
+    public void resetEstimations() {
+        this.numberOfEstimation = 0;
+        this.currentEstimation = 100;
+    }
+
 }

@@ -19,8 +19,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped
 public class OrderGateway {
-    @ConfigProperty(name = "fr.pantheonsorbonne.ufr27.miage.jmsPrefix")
-    String jmsPrefix;
+
 
     @Inject
     ConnectionFactory connectionFactory;
@@ -62,5 +61,7 @@ public class OrderGateway {
             Log.error("Erreur lors de l'envoi de la confirmation: ", e);
         }
     }
+
+
 
 }
