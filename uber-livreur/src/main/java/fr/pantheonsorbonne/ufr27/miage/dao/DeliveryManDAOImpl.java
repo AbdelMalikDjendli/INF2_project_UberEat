@@ -12,5 +12,29 @@ public class DeliveryManDAOImpl implements DeliveryManDAO {
     @PersistenceContext(name = "mysql")
     EntityManager em;
 
+    @Override
+    @Transactional
+    public String getDeliveryManName() {
+        return (String) this.em.createQuery("Select d.name from DeliveryMan d").getSingleResult();
 
+    }
+
+    @Override
+    @Transactional
+    public Boolean isDeliveryManAvaible() {
+        return (Boolean) this.em.createQuery("Select d.isAvailable from DeliveryMan d").getSingleResult();
+
+    }
+
+    @Override
+    @Transactional
+    public String getDeliveryManVehicule() {
+        return (String) this.em.createQuery("Select d.vehicleType from DeliveryMan d").getSingleResult();
+    }
+
+    @Override
+    @Transactional
+    public long getIdDeliveryMan() {
+        return (long) this.em.createQuery("Select d.id from DeliveryMan d").getSingleResult();
+    }
 }

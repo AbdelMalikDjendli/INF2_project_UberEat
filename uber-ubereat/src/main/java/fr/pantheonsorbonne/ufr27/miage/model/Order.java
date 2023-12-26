@@ -54,4 +54,8 @@ public class Order {
     public void setDarkKitchen(DarkKitchen darkKitchen) {
         this.darkKitchen = darkKitchen;
     }
+
+    public void setDeliveryMan(DeliveryMan deliveryMan) {
+        this.deliveryMan=deliveryMan;
+    }
 }

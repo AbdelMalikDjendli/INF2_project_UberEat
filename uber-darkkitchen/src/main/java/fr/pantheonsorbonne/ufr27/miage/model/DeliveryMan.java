@@ -7,7 +7,7 @@ public class DeliveryMan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private long id;
 
     @Column(name = "name", nullable = false, length = 45)
     private String name;
@@ -30,7 +30,7 @@ public class DeliveryMan {
         this.name = name;
     }
 
-    public Integer getId() {
+    public long getId() {
         return id;
     }
 

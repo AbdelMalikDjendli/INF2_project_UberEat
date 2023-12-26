@@ -1,6 +1,7 @@
 package fr.pantheonsorbonne.ufr27.miage.dao;
 
 import fr.pantheonsorbonne.ufr27.miage.model.DarkKitchen;
+import fr.pantheonsorbonne.ufr27.miage.model.DeliveryMan;
 import fr.pantheonsorbonne.ufr27.miage.model.Order;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
@@ -32,6 +33,13 @@ public class OrderDAOImpl implements OrderDAO {
     public void addDarkKitchen(long orderId, DarkKitchen dk) {
         Order o = em.find(Order.class, orderId);
         o.setDarkKitchen(dk);
+    }
+
+    @Override
+    public void addDeliveryMan(long orderId, DeliveryMan deliveryMan) {
+        Order o = em.find(Order.class, orderId);
+        o.setDeliveryMan(deliveryMan);
+
     }
 
     @Override

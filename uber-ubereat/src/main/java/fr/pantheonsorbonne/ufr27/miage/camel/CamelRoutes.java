@@ -21,6 +21,9 @@ public class CamelRoutes extends RouteBuilder {
     @Inject
     ChoiceProcessor choiceProcessor;
 
+    @Inject
+    DeliveryProcessor deliveryProcessor;
+
     @Override
     public void configure() throws Exception {
 
@@ -31,6 +34,9 @@ public class CamelRoutes extends RouteBuilder {
 
         from("sjms2:queue:M1.DK_ESTIMATION")
                 .process(choiceProcessor);
+
+        from("sjms2:queue:M1.LIVREUR_DISPO_CONFIRMATION")
+                .process(deliveryProcessor);
 
 
 
@@ -68,6 +74,24 @@ public class CamelRoutes extends RouteBuilder {
                 //remettre à 0
                 dkChoiceService.resetEstimations();
             }
+        }
+    }
+
+    @ApplicationScoped
+    private static class DeliveryProcessor implements Processor {
+
+
+        @Inject
+        OrderGateway orderGateway;
+
+
+        @Override
+        public void process(Exchange exchange) throws Exception {
+            long deliveryManId = exchange.getIn().getHeader("deliveryManId", Long.class);
+            long orderId = exchange.getIn().getHeader("orderId", Long.class);
+
+            // Appeler la méthode pour confirmer le premier livreur
+            orderGateway.sendConfirmationToDeliveryMan(orderId, deliveryManId);
         }
     }
 }

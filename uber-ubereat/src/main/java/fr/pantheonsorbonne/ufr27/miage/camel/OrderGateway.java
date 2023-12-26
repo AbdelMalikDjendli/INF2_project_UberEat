@@ -47,7 +47,7 @@ public class OrderGateway {
     }
 
     public void sendConfirmationToDarkkitchen(String dkName) throws JsonProcessingException {
-        //On récupère la commande
+        //On récupère la commande - mettre à jour la bdd
         Order orderModel = orderService.dkFoundUpdate(dkName);
         //On convertit l'order en orderDTO
         OrderDTO orderDTO = orderService.getOrderDTOFromModel(orderModel.getId());
@@ -67,18 +67,40 @@ public class OrderGateway {
 
     public void sendOrderToDeliveryMen(long orderId, String dkName) {
         Random random = new Random();
-        int randomDistance = random.nextInt(20);
+        int randomDistance = random.nextInt(20); // Générer une distance aléatoire
 
         try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
-            TextMessage message = context.createTextMessage(Long.toString(orderId));
-            message.setStringProperty("distance", Integer.toString(randomDistance));
+            // Créer un message contenant l'ID de la commande et l'ID de la Dark Kitchen
+            TextMessage message = context.createTextMessage();
+
+            message.setLongProperty("orderId", orderId);
+            message.setStringProperty("dkName", dkName);
+
+            // Ajouter la distance dans le header du message
+            message.setIntProperty("distance", randomDistance);
+
+            // Envoyer le message au topic pour les livreurs
             context.createProducer().send(context.createTopic("M1.DELIVERY"), message);
-            Log.info("Commande envoyée aux livreurs. distance : " + randomDistance + " km");
+            Log.info("Commande ID: " + orderId + " envoyée aux livreurs. Dark Kitchen: " + dkName + ", Distance : " + randomDistance + " km");
         } catch (JMSRuntimeException | JMSException e) {
             Log.error("Erreur lors de l'envoi de la commande aux livreurs: ", e);
         }
     }
 
 
-
+    public void sendConfirmationToDeliveryMan(long orderId, long deliveryManId) throws JsonProcessingException {
+        //On récupère la commande - mettre à jour la bdd
+        Order orderModel = orderService.deliveryManUpdate(deliveryManId);
+        //On convertit l'order en orderDTO
+        OrderDTO orderDTO = orderService.getOrderDTOFromModel(orderModel.getId());
+        //On convertit l'orderDTO en Json
+        ObjectMapper objectMapper = new ObjectMapper();
+        String orderJson = objectMapper.writeValueAsString(orderDTO);
+        try(JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
+            //On envoie la commande à la darkkitchen choisi en guise de confirmation
+            TextMessage msg = context.createTextMessage(orderJson);
+            context.createProducer().send(context.createQueue("M1."+deliveryManId), msg);
+            Log.info("Message de confirmation envoyé au livreur avec ID: " + deliveryManId + " pour la commande ID: " + orderId);
+        }
+    }
 }

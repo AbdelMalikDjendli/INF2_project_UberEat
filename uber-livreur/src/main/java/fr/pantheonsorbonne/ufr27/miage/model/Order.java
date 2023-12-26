@@ -25,7 +25,7 @@ public class Order {
         return dk;
     }
 
-    public void setMenu(DarkKitchen menu) {
+    public void setDk(DarkKitchen menu) {
         this.dk = dk;
     }
 

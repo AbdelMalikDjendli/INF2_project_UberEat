@@ -1,5 +1,6 @@
 package fr.pantheonsorbonne.ufr27.miage.service;
 
+import fr.pantheonsorbonne.ufr27.miage.dao.DeliveryManDAO;
 import fr.pantheonsorbonne.ufr27.miage.dao.DkDAO;
 import fr.pantheonsorbonne.ufr27.miage.dao.MenuDAO;
 import fr.pantheonsorbonne.ufr27.miage.dao.OrderDAO;
@@ -7,7 +8,7 @@ import fr.pantheonsorbonne.ufr27.miage.dto.MenuDTO;
 import fr.pantheonsorbonne.ufr27.miage.dto.OrderDTO;
 import fr.pantheonsorbonne.ufr27.miage.model.Menu;
 import fr.pantheonsorbonne.ufr27.miage.model.Order;
-import io.quarkus.logging.Log;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -28,6 +29,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Inject
     DkDAO dkDAO;
+
+    @Inject
+    DeliveryManDAO deliveryManDAO;
 
     @Override
     @Transactional
@@ -67,6 +71,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
-
+    @Override
+    @Transactional
+    public Order deliveryManUpdate(Long dmId) {
+        Order orderModel = orderDAO.getLastOrder();
+        orderDAO.updateStatus(orderModel.getId(), "en cours de livraison ");
+        orderDAO.addDeliveryMan(orderModel.getId(), deliveryManDAO.findDMById(dmId));
+        return orderModel;
+    }
 
 }

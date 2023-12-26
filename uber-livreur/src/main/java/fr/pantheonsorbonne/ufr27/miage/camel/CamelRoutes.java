@@ -1,43 +1,81 @@
 package fr.pantheonsorbonne.ufr27.miage.camel;
 
 
+import fr.pantheonsorbonne.ufr27.miage.dto.OrderDTO;
+import fr.pantheonsorbonne.ufr27.miage.service.DeliveryManService;
+import fr.pantheonsorbonne.ufr27.miage.service.OrderService;
+import io.quarkus.logging.Log;
 import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class CamelRoutes extends RouteBuilder {
-    @ConfigProperty(name = "fr.pantheonsorbonne.ufr27.miage.jmsPrefix")
-    String jmsPrefix;
 
     @Inject
     CamelContext camelContext;
+    @Inject
+    DeliveryManAvailabilityProcessor deliveryManAvailabilityProcessor;
+
+    @Inject
+    DeliveryManService deliveryManService;
+
+    @Inject
+    OrderService orderService;
+
 
     @Override
     public void configure() throws Exception {
 
         camelContext.setTracing(true);
 
+
         from("sjms2:topic:M1.DELIVERY")
+                .process(deliveryManAvailabilityProcessor)
                 .choice()
-                .when(header("distance").isLessThanOrEqualTo(10))
-                .to("direct:assignBikeDelivery")
-                .when(header("distance").isGreaterThan(10))
-                .to("direct:assignScooterDelivery")
+                .when(header("canTakeOrder"))
+                .log("Le livreur est disponible et a le bon véhicule pour la distance de ${header.distance} km")
+                .to("sjms2:queue:LIVREUR_DISPO_CONFIRMATION")
                 .otherwise()
-                .log("Aucun livreur disponible pour cette distance");
+                .log("Le livreur n'est pas disponible ou il n'a pas le bon type de véhicule pour la distance de ${header.distance} km");
 
-        from("direct:assignBikeDelivery")
-                .log("Attribution de la livraison à un coursier à vélo pour une commande à ${header.distance} km de distance");
-        // Plus de logique pour assigner le livreur à vélo
 
-        from("direct:assignScooterDelivery")
-                .log("Attribution de la livraison à un coursier en scooter pour une commande à ${header.distance} km de distance");
-        // Plus de logique pour assigner le livreur en scooter
-
+        from("sjms2:queue:M1." + deliveryManService.getIdDeliveryMan()).unmarshal().json(OrderDTO.class)
+                .log("Commande en préparation");
 
     }
+
+
+
+    @ApplicationScoped
+    private static class DeliveryManAvailabilityProcessor implements Processor {
+
+        @Inject
+        DeliveryManService deliveryManService;
+
+        @Override
+        public void process(Exchange exchange) throws Exception {
+            // Récupération de l'ID de la commande et de la distance à partir des headers
+            int orderId = exchange.getIn().getHeader("orderId", Integer.class);
+            int distance = exchange.getIn().getHeader("distance", Integer.class);
+            boolean isAvailable = deliveryManService.isDeliveryManAvailable();
+            String vehicleType = deliveryManService.getVehiculeDeliveryMan();
+
+            // determine si le livreur peut prendre la co
+            boolean canTakeOrder = isAvailable &&
+                    ((vehicleType.equals("bike") && distance <= 10) || (vehicleType.equals("scooter") && distance > 10));
+
+            // changer le header du message
+            exchange.getIn().setHeader("canTakeOrder", canTakeOrder);
+            if (canTakeOrder) {
+
+                exchange.getIn().setHeader("deliveryManId", deliveryManService.getIdDeliveryMan());
+                exchange.getIn().setHeader("orderId", orderId);
+            }
+        }
+    }
 }
+
