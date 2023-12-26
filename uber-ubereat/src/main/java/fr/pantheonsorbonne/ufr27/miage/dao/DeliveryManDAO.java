@@ -5,4 +5,6 @@ import fr.pantheonsorbonne.ufr27.miage.model.DeliveryMan;
 
 public interface DeliveryManDAO {
     DeliveryMan findDMById(Long id);
+
+    void setIsAvaible(long id,boolean b);
 }

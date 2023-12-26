@@ -77,6 +77,7 @@ public class OrderServiceImpl implements OrderService {
         Order orderModel = orderDAO.getLastOrder();
         orderDAO.updateStatus(orderModel.getId(), "en cours de livraison ");
         orderDAO.addDeliveryMan(orderModel.getId(), deliveryManDAO.findDMById(dmId));
+        deliveryManDAO.setIsAvaible(dmId,false);
         return orderModel;
     }
 

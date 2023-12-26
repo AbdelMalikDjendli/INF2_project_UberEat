@@ -18,7 +18,7 @@ public class CamelRoutes extends RouteBuilder {
     @Inject
     CamelContext camelContext;
     @Inject
-    DeliveryManAvailabilityProcessor deliveryManAvailabilityProcessor;
+    DeliveryManProcessor deliveryManProcessor;
 
     @Inject
     DeliveryManService deliveryManService;
@@ -34,7 +34,7 @@ public class CamelRoutes extends RouteBuilder {
 
 
         from("sjms2:topic:M1.DELIVERY")
-                .process(deliveryManAvailabilityProcessor)
+                .process(deliveryManProcessor)
                 .choice()
                 .when(header("canTakeOrder"))
                 .log("Le livreur est disponible et a le bon véhicule pour la distance de ${header.distance} km")
@@ -43,15 +43,17 @@ public class CamelRoutes extends RouteBuilder {
                 .log("Le livreur n'est pas disponible ou il n'a pas le bon type de véhicule pour la distance de ${header.distance} km");
 
 
-        from("sjms2:queue:M1." + deliveryManService.getIdDeliveryMan()).unmarshal().json(OrderDTO.class)
-                .log("Commande en préparation");
+        from("sjms2:queue:M1." + deliveryManService.getIdDeliveryMan()).unmarshal().json(OrderDTO.class).process(exchange -> {
+            orderService.createOrder(exchange.getIn().getBody(OrderDTO.class).menu().name());
+            Log.info("Commande en livraison");
+        });
 
     }
 
 
 
     @ApplicationScoped
-    private static class DeliveryManAvailabilityProcessor implements Processor {
+    private static class DeliveryManProcessor implements Processor {
 
         @Inject
         DeliveryManService deliveryManService;

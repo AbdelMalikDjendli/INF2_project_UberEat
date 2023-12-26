@@ -19,8 +19,6 @@ public class DkDAOImpl implements DkDAO {
     )
     EntityManager em;
 
-    public DkDAOImpl() {
-    }
 
     @Override
     @Transactional

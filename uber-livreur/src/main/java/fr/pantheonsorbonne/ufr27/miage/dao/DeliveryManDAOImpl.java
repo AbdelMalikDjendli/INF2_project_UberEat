@@ -37,4 +37,10 @@ public class DeliveryManDAOImpl implements DeliveryManDAO {
     public long getIdDeliveryMan() {
         return (long) this.em.createQuery("Select d.id from DeliveryMan d").getSingleResult();
     }
+
+    @Override
+    public void setDeliveryManIsAvaible(long id, boolean b) {
+        DeliveryMan dm = em.find(DeliveryMan.class,id);
+        dm.setIsAvailable(b);
+    }
 }

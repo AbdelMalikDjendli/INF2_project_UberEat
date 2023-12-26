@@ -7,5 +7,7 @@ public interface DeliveryManService {
 
     long getIdDeliveryMan();
 
+    void setDeliveryManIsAvaible(long id,boolean b);
+
 
 }
