@@ -14,8 +14,7 @@ import org.apache.camel.builder.RouteBuilder;
 
 @ApplicationScoped
 public class CamelRoutes extends RouteBuilder {
-    @Inject
-    OrderService orderService;
+
     @Inject
     CamelContext camelContext;
 
@@ -34,15 +33,6 @@ public class CamelRoutes extends RouteBuilder {
                 .process(choiceProcessor);
 
 
-        from("sjms2:queue:M1.DK_READY")
-                .process(exchange -> {
-                    String orderIdStr = exchange.getIn().getBody(String.class);
-                    long orderId = Long.parseLong(orderIdStr);
-                    Log.info("Notification de commande prête pour l'ID: " + orderId);
-                    // Mettre à jour le statut de la commande dans la base de données
-                    orderService.updateOrderStatusToReady(orderId);
-                });
-
 
     }
 
@@ -58,7 +48,7 @@ public class CamelRoutes extends RouteBuilder {
 
         @Override
         public void process(Exchange exchange) throws Exception {
-            dkChoiceService.resetEstimations();
+            //remettre à 0
             String body = exchange.getIn().getBody(String.class);
             //Une incrémente le nombre d'estimation reçu
             dkChoiceService.setNumberOfEstimation();
@@ -74,7 +64,13 @@ public class CamelRoutes extends RouteBuilder {
             }
             //Si toutes les darkkitchen ont répondu alors on envoi la confirmation à la darkkitchen choisi
             if(dkChoiceService.getNumberOfEstimation()==1){
-                orderGateway.sendConfirmationToDarkkitchen(dkChoiceService.getDkName());
+                if(dkChoiceService.getDkName()!=null) {
+                    orderGateway.sendConfirmationToDarkkitchen(dkChoiceService.getDkName());
+                }
+                else{
+                    Log.info("Pas de restaurant disponible");
+                }
+                dkChoiceService.resetEstimations();
             }
         }
     }

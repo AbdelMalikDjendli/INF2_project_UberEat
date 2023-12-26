@@ -62,18 +62,6 @@ public class OrderGateway {
         }
     }
 
-    public void receiveOrderReadyFromDarkKitchen() {
-        try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
-            JMSConsumer consumer = context.createConsumer(context.createQueue("M1.DK_READY"));
-            Message message = consumer.receive();
-            if (message instanceof TextMessage) {
-                //String orderId = ((TextMessage) message).getText();
-                // Logique pour trouver un livreur
-                //findDeliveryPerson(orderId);
-            }
-        } catch (JMSRuntimeException e) {
-            Log.error("Erreur lors de la réception du message de la Dark Kitchen: ", e);
-        }
-    }
+
 
 }

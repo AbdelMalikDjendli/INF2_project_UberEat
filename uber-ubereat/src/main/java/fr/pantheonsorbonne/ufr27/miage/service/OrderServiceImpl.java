@@ -50,7 +50,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDTO getOrderDTOFromModel(long orderId) {
         Order orderModel = orderDAO.findOrderById(orderId);
         MenuDTO menuDto = new MenuDTO(orderModel.getMenu().getName(), orderModel.getMenu().getDescription());
-        return new OrderDTO(orderId, orderModel.getStatus(), menuDto);
+        return new OrderDTO( orderModel.getStatus(), menuDto);
     }
 
     /*
@@ -68,14 +68,5 @@ public class OrderServiceImpl implements OrderService {
 
 
 
-    @Override
-    @Transactional
-    public void updateOrderStatusToReady(long orderId) {
-        Order orderModel = orderDAO.findOrderById(orderId);
-
-        orderDAO.updateStatus(orderModel.getId(), "Commande prête ~ recherche d'un livreur");
-
-
-    }
 
 }
