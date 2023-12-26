@@ -18,7 +18,7 @@ public class DeliveryManDAOImpl implements DeliveryManDAO {
     @Override
     @Transactional
     public DeliveryMan findDMById(Long id) {
-        return (DeliveryMan) this.em.createQuery("Select d from DeliveryMan d where d.id =: id").setParameter("id", id).getSingleResult();
+        return (DeliveryMan) this.em.createQuery("Select d from DeliveryMan d where d.id=:id").setParameter("id", id).getSingleResult();
 
     }
 }

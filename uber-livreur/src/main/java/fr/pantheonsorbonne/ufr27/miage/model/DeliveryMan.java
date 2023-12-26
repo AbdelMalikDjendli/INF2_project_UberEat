@@ -16,7 +16,7 @@ public class DeliveryMan {
     private String vehicleType;
 
     @Column(name = "is_available")
-    private boolean isAvailable= false;
+    private Boolean isAvailable= true;
 
     public DeliveryMan() {
     }

@@ -38,7 +38,7 @@ public class CamelRoutes extends RouteBuilder {
                 .choice()
                 .when(header("canTakeOrder"))
                 .log("Le livreur est disponible et a le bon véhicule pour la distance de ${header.distance} km")
-                .to("sjms2:queue:LIVREUR_DISPO_CONFIRMATION")
+                .to("sjms2:queue:M1.LIVREUR_DISPO_CONFIRMATION")
                 .otherwise()
                 .log("Le livreur n'est pas disponible ou il n'a pas le bon type de véhicule pour la distance de ${header.distance} km");
 
@@ -66,7 +66,7 @@ public class CamelRoutes extends RouteBuilder {
 
             // determine si le livreur peut prendre la co
             boolean canTakeOrder = isAvailable &&
-                    ((vehicleType.equals("bike") && distance <= 10) || (vehicleType.equals("scooter") && distance > 10));
+                    ((vehicleType.equals("vélo") && distance <= 10) || (vehicleType.equals("scooter") && distance > 10));
 
             // changer le header du message
             exchange.getIn().setHeader("canTakeOrder", canTakeOrder);
