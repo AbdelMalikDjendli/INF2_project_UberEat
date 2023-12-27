@@ -1,5 +1,6 @@
 package fr.pantheonsorbonne.ufr27.miage.service;
 
+import fr.pantheonsorbonne.ufr27.miage.dao.DkDAO;
 import fr.pantheonsorbonne.ufr27.miage.dao.OrderDAO;
 import fr.pantheonsorbonne.ufr27.miage.dto.OrderDTO;
 import fr.pantheonsorbonne.ufr27.miage.model.Order;
@@ -15,14 +16,14 @@ public class OderServiceImpl implements OrderService{
     OrderDAO orderDAO;
 
     @Inject
-    dk menuDAO;
+    DkDAO dkDAO;
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
     public void createOrder(String dKname) {
-       // orderDAO.newOrder(.findMenuByName(menuName));
+       orderDAO.newOrder(dkDAO.findDKByName(dKname));
 
     }
 

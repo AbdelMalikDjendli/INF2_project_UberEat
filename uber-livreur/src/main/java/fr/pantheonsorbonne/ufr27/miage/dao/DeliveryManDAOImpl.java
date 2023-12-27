@@ -39,6 +39,7 @@ public class DeliveryManDAOImpl implements DeliveryManDAO {
     }
 
     @Override
+    @Transactional
     public void setDeliveryManIsAvaible(long id, boolean b) {
         DeliveryMan dm = em.find(DeliveryMan.class,id);
         dm.setIsAvailable(b);
