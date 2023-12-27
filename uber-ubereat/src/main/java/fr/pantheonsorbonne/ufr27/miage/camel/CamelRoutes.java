@@ -32,6 +32,10 @@ public class CamelRoutes extends RouteBuilder {
         from("sjms2:queue:M1.DK_ESTIMATION")
                 .process(choiceProcessor);
 
+        // A FAIRE AVEC LE QRCODE
+        from("sjms2:queue:M1.ORDER_GIVEN_TO_DELIVERYMAN")
+                .process();
+
 
 
     }

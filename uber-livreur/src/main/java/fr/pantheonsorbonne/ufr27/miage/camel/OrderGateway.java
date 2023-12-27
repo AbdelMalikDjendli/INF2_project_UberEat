@@ -11,14 +11,13 @@ public class OrderGateway {
     @Inject
     ConnectionFactory connectionFactory;
 
-    public void startDeliveryEvent() {
+    public void takeOrderFromDK(String dkName) {
         try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
-            TextMessage message = context.createTextMessage("Delivery has started");
-            context.createProducer().send(context.createQueue("M1.ORDER_GIVEN_TO_DELIVERYMAN"), message);
-            //Log.info("Message envoyé à Uber Eats : Commande " + orderId + " prête");
+            TextMessage message = context.createTextMessage("Start Delivery process");
+            context.createProducer().send(context.createQueue("M1.ASK_ORDER"), message);
+            Log.info("Le livreur demande la commande à la Darkkitchen");
         } catch (JMSRuntimeException e) {
-            Log.error("Error : ORDER_GIVEN_TO_DELIVERYMAN", e);
+            Log.error("Erreur lors de l'envoi du message 'Le livreur demande la commande à la DK': ", e);
         }
     }
-
 }
