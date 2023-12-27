@@ -35,6 +35,7 @@ public class CamelRoutes extends RouteBuilder {
 
         from("sjms2:topic:M1.DELIVERY")
                 .process(deliveryManProcessor)
+                //content-based route
                 .choice()
                 .when(header("canTakeOrder"))
                 .log("Le livreur est disponible et a le bon véhicule pour la distance de ${header.distance} km")
@@ -44,7 +45,9 @@ public class CamelRoutes extends RouteBuilder {
 
 
         from("sjms2:queue:M1." + deliveryManService.getIdDeliveryMan()).unmarshal().json(OrderDTO.class).process(exchange -> {
+            //ajouter la commande à la bdd
             orderService.createOrder("DK1");
+            //le livreur n'est plus dispo
             deliveryManService.setDeliveryManIsAvaible(deliveryManService.getIdDeliveryMan(),false);
             Log.info("Commande en livraison");
         });
@@ -64,17 +67,19 @@ public class CamelRoutes extends RouteBuilder {
             // Récupération de l'ID de la commande et de la distance à partir des headers
             int orderId = exchange.getIn().getHeader("orderId", Integer.class);
             int distance = exchange.getIn().getHeader("distance", Integer.class);
+
+            //récup de la dispo et du véhicule du livreur
             boolean isAvailable = deliveryManService.isDeliveryManAvailable();
             String vehicleType = deliveryManService.getVehiculeDeliveryMan();
 
-            // determine si le livreur peut prendre la co
+            // determine si le livreur peut prendre la co ( dispo + véhicule)
             boolean canTakeOrder = isAvailable &&
                     ((vehicleType.equals("vélo") && distance <= 10) || (vehicleType.equals("scooter") && distance > 10));
 
             // changer le header du message
             exchange.getIn().setHeader("canTakeOrder", canTakeOrder);
+            // si il peut, on envoit son id et la co
             if (canTakeOrder) {
-
                 exchange.getIn().setHeader("deliveryManId", deliveryManService.getIdDeliveryMan());
                 exchange.getIn().setHeader("orderId", orderId);
             }

@@ -59,6 +59,8 @@ public class OrderGateway {
             TextMessage msg = context.createTextMessage(orderJson);
             context.createProducer().send(context.createQueue("M1."+dkName), msg);
             Log.info("La darkkitchen choisi est :"+ dkName);
+
+            //envoyer commande aux livreurs
             sendOrderToDeliveryMen(orderModel.getId(),dkName);
         } catch (JMSRuntimeException e) {
             Log.error("Erreur lors de l'envoi de la confirmation: ", e);
@@ -70,13 +72,11 @@ public class OrderGateway {
         int randomDistance = random.nextInt(20); // Générer une distance aléatoire
 
         try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
-            // Créer un message contenant l'ID de la commande et l'ID de la Dark Kitchen
+            // Créer un message contenant l'ID de la commande,l'ID de la Dark Kitchen et la distance
             TextMessage message = context.createTextMessage();
 
             message.setLongProperty("orderId", orderId);
             message.setStringProperty("dkName", dkName);
-
-            // Ajouter la distance dans le header du message
             message.setIntProperty("distance", randomDistance);
 
             // Envoyer le message au topic pour les livreurs
@@ -97,7 +97,7 @@ public class OrderGateway {
         ObjectMapper objectMapper = new ObjectMapper();
         String orderJson = objectMapper.writeValueAsString(orderDTO);
         try(JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
-            //On envoie la commande à la darkkitchen choisi en guise de confirmation
+            //On envoie la commande au livreur  en guise de confirmation
             TextMessage msg = context.createTextMessage(orderJson);
             context.createProducer().send(context.createQueue("M1."+deliveryManId), msg);
             Log.info("Message de confirmation envoyé au livreur avec ID: " + deliveryManId + " pour la commande ID: " + orderId);
