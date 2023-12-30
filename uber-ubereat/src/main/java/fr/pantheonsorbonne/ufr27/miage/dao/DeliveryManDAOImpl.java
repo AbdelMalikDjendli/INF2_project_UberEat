@@ -18,15 +18,15 @@ public class DeliveryManDAOImpl implements DeliveryManDAO {
 
     @Override
     @Transactional
-    public DeliveryMan findDMById(Long id) {
-        return (DeliveryMan) this.em.createQuery("Select d from DeliveryMan d where d.id=:id").setParameter("id", id).getSingleResult();
+    public DeliveryMan findDMByName(String name) {
+        return (DeliveryMan) this.em.createQuery("Select d from DeliveryMan d where d.name=:name").setParameter("name", name).getSingleResult();
 
     }
 
     @Override
     @Transactional
-    public void setIsAvaible(long deliveryMenId,boolean b) {
-        DeliveryMan dm = em.find(DeliveryMan.class,deliveryMenId);
+    public void setIsAvaible(String deliveryMenName,boolean b) {
+        DeliveryMan dm = findDMByName(deliveryMenName);
         dm.setIsAvailable(b);
     }
 }

@@ -11,6 +11,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.processor.resequencer.Timeout;
 
 @ApplicationScoped
 public class CamelRoutes extends RouteBuilder {
@@ -35,6 +36,7 @@ public class CamelRoutes extends RouteBuilder {
         from("sjms2:queue:M1.DK_ESTIMATION")
                 .process(choiceProcessor);
 
+        //récéption des livreurs dispo
         from("sjms2:queue:M1.LIVREUR_DISPO_CONFIRMATION")
                 .process(deliveryProcessor);
 
@@ -85,13 +87,16 @@ public class CamelRoutes extends RouteBuilder {
         OrderGateway orderGateway;
 
 
+
         @Override
         public void process(Exchange exchange) throws Exception {
-            long deliveryManId = exchange.getIn().getHeader("deliveryManId", Long.class);
-            long orderId = exchange.getIn().getHeader("orderId", Long.class);
+
+            String deliveryManName = exchange.getIn().getHeader("deliveryManName", String.class);
+
 
             // Appeler la méthode pour confirmer le premier livreur
-            orderGateway.sendConfirmationToDeliveryMan(orderId, deliveryManId);
+            orderGateway.sendConfirmationToDeliveryMan( deliveryManName);
+
         }
     }
 }

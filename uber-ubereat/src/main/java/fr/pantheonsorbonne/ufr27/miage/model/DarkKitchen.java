@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "dark_kitchens")
-public class DarkKitchen extends Object {
+public class DarkKitchen {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -13,7 +13,7 @@ public class DarkKitchen extends Object {
     @Column(name = "name")
     private String name;
 
-
-
-
+    public String getName() {
+        return name;
+    }
 }

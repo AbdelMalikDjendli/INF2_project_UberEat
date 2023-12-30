@@ -69,13 +69,13 @@ public class OrderGateway {
 
     public void sendOrderToDeliveryMen(long orderId, String dkName) {
         Random random = new Random();
-        int randomDistance = random.nextInt(20); // Générer une distance aléatoire
+        int randomDistance = random.nextInt(20) + 1; // Générer une distance aléatoire
 
         try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
             // Créer un message contenant l'ID de la commande,l'ID de la Dark Kitchen et la distance
             TextMessage message = context.createTextMessage();
 
-            message.setLongProperty("orderId", orderId);
+            message.setLongProperty("orderId", orderId); //à voir si utile ?
             message.setStringProperty("dkName", dkName);
             message.setIntProperty("distance", randomDistance);
 
@@ -88,9 +88,9 @@ public class OrderGateway {
     }
 
 
-    public void sendConfirmationToDeliveryMan(long orderId, long deliveryManId) throws JsonProcessingException {
+    public void sendConfirmationToDeliveryMan( String deliveryManName) throws JsonProcessingException {
         //On récupère la commande - mettre à jour la bdd
-        Order orderModel = orderService.deliveryManUpdate(deliveryManId);
+        Order orderModel = orderService.deliveryManUpdate(deliveryManName);
         //On convertit l'order en orderDTO
         OrderDTO orderDTO = orderService.getOrderDTOFromModel(orderModel.getId());
         //On convertit l'orderDTO en Json
@@ -99,8 +99,8 @@ public class OrderGateway {
         try(JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
             //On envoie la commande au livreur  en guise de confirmation
             TextMessage msg = context.createTextMessage(orderJson);
-            context.createProducer().send(context.createQueue("M1."+deliveryManId), msg);
-            Log.info("Message de confirmation envoyé au livreur avec ID: " + deliveryManId + " pour la commande ID: " + orderId);
+            context.createProducer().send(context.createQueue("M1."+deliveryManName), msg);
+            Log.info("Message de confirmation envoyé au livreur  " + deliveryManName + " pour la commande ID: " + orderModel.getId());
         }
     }
 }

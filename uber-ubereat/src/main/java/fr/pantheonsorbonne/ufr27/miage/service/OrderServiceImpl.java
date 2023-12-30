@@ -73,12 +73,20 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Order deliveryManUpdate(Long dmId) {
+    public Order deliveryManUpdate(String dmName) {
         Order orderModel = orderDAO.getLastOrder();
         orderDAO.updateStatus(orderModel.getId(), "en cours de livraison ");
-        orderDAO.addDeliveryMan(orderModel.getId(), deliveryManDAO.findDMById(dmId));
-        deliveryManDAO.setIsAvaible(dmId,false);
+        orderDAO.addDeliveryMan(orderModel.getId(), deliveryManDAO.findDMByName(dmName));
+        deliveryManDAO.setIsAvaible(dmName,false);
         return orderModel;
+    }
+
+    @Override
+    @Transactional
+    public void noneDeliveryManUpdate() {
+        Order orderModel = orderDAO.getLastOrder();
+        orderDAO.updateStatus(orderModel.getId(), "aucun livreur trouvé");
+
     }
 
 }

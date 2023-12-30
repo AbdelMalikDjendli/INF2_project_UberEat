@@ -41,10 +41,11 @@ public class CamelRoutes extends RouteBuilder {
                 .log("Le livreur est disponible et a le bon véhicule pour la distance de ${header.distance} km")
                 .to("sjms2:queue:M1.LIVREUR_DISPO_CONFIRMATION")
                 .otherwise()
+                .to("sjms2:queue:M1.LIVREUR_INDISPO")
                 .log("Le livreur n'est pas disponible ou il n'a pas le bon type de véhicule pour la distance de ${header.distance} km");
 
 
-        from("sjms2:queue:M1." + deliveryManService.getIdDeliveryMan()).unmarshal().json(OrderDTO.class).process(exchange -> {
+        from("sjms2:queue:M1." + deliveryManService.getNameDeliveryMan()).unmarshal().json(OrderDTO.class).process(exchange -> {
             //ajouter la commande à la bdd
             orderService.createOrder("DK1");
             //le livreur n'est plus dispo
@@ -64,7 +65,7 @@ public class CamelRoutes extends RouteBuilder {
 
         @Override
         public void process(Exchange exchange) throws Exception {
-            // Récupération de l'ID de la commande et de la distance à partir des headers
+            // Récupération de l'ID de la commande et de la distance
             int orderId = exchange.getIn().getHeader("orderId", Integer.class);
             int distance = exchange.getIn().getHeader("distance", Integer.class);
 
@@ -80,9 +81,11 @@ public class CamelRoutes extends RouteBuilder {
             exchange.getIn().setHeader("canTakeOrder", canTakeOrder);
             // si il peut, on envoit son id et la co
             if (canTakeOrder) {
-                exchange.getIn().setHeader("deliveryManId", deliveryManService.getIdDeliveryMan());
+                exchange.getIn().setHeader("deliveryManName", deliveryManService.getNameDeliveryMan());
                 exchange.getIn().setHeader("orderId", orderId);
+                // son nom ?
             }
+
         }
     }
 }

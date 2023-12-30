@@ -21,7 +21,7 @@ public class Order {
         this.id = id;
     }
 
-    public DarkKitchen getMenu() {
+    public DarkKitchen getDk() {
         return dk;
     }
 

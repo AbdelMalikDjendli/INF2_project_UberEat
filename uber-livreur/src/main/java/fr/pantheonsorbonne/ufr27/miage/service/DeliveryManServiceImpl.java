@@ -30,5 +30,10 @@ public class DeliveryManServiceImpl implements DeliveryManService{
         deliveryManDAO.setDeliveryManIsAvaible(id,b);
     }
 
+    @Override
+    public String getNameDeliveryMan() {
+        return deliveryManDAO.getDeliveryManName();
+    }
+
 
 }

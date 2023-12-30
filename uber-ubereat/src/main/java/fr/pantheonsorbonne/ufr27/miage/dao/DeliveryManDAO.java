@@ -4,7 +4,7 @@ import fr.pantheonsorbonne.ufr27.miage.model.DarkKitchen;
 import fr.pantheonsorbonne.ufr27.miage.model.DeliveryMan;
 
 public interface DeliveryManDAO {
-    DeliveryMan findDMById(Long id);
+    DeliveryMan findDMByName(String name);
 
-    void setIsAvaible(long id,boolean b);
+    void setIsAvaible(String name,boolean b);
 }
