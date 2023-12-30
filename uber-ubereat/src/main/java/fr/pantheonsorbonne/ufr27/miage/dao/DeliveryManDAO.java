@@ -7,4 +7,6 @@ public interface DeliveryManDAO {
     DeliveryMan findDMByName(String name);
 
     void setIsAvaible(String name,boolean b);
+
+    int countTotalDeliveryMen();
 }

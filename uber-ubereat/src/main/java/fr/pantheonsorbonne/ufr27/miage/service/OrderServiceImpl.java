@@ -83,10 +83,15 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void noneDeliveryManUpdate() {
-        Order orderModel = orderDAO.getLastOrder();
-        orderDAO.updateStatus(orderModel.getId(), "aucun livreur trouvé");
+    public void noneDeliveryManUpdate(Long oderId) {
+        orderDAO.findOrderById(oderId);
+        orderDAO.updateStatus(oderId, "aucun livreur trouvé");
 
+    }
+
+    @Override
+    public int countTotalDeliveryMen() {
+        return deliveryManDAO.countTotalDeliveryMen();
     }
 
 }

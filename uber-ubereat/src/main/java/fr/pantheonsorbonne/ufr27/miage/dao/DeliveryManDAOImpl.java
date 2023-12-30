@@ -29,4 +29,12 @@ public class DeliveryManDAOImpl implements DeliveryManDAO {
         DeliveryMan dm = findDMByName(deliveryMenName);
         dm.setIsAvailable(b);
     }
+
+    @Override
+    @Transactional
+    public int countTotalDeliveryMen() {
+        Long count = em.createQuery("SELECT COUNT(d) FROM DeliveryMan d", Long.class)
+                .getSingleResult();
+        return count.intValue();
+    }
 }

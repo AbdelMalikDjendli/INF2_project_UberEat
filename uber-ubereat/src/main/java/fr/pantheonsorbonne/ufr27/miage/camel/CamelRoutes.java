@@ -3,7 +3,6 @@ package fr.pantheonsorbonne.ufr27.miage.camel;
 
 import fr.pantheonsorbonne.ufr27.miage.service.DkChoiceService;
 import fr.pantheonsorbonne.ufr27.miage.service.OrderService;
-import fr.pantheonsorbonne.ufr27.miage.service.OrderServiceImpl;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -11,7 +10,9 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.processor.resequencer.Timeout;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @ApplicationScoped
 public class CamelRoutes extends RouteBuilder {
@@ -24,6 +25,9 @@ public class CamelRoutes extends RouteBuilder {
 
     @Inject
     DeliveryProcessor deliveryProcessor;
+
+    @Inject
+    NoAvailableDeliverersProcessor noAvailableDeliverersProcessor;
 
     @Override
     public void configure() throws Exception {
@@ -40,6 +44,8 @@ public class CamelRoutes extends RouteBuilder {
         from("sjms2:queue:M1.LIVREUR_DISPO_CONFIRMATION")
                 .process(deliveryProcessor);
 
+        from("sjms2:queue:M1.LIVREUR_INDISPO")
+                .process(noAvailableDeliverersProcessor);
 
 
     }
@@ -97,6 +103,33 @@ public class CamelRoutes extends RouteBuilder {
             // Appeler la méthode pour confirmer le premier livreur
             orderGateway.sendConfirmationToDeliveryMan( deliveryManName);
 
+        }
+    }
+
+    @ApplicationScoped
+    private static class NoAvailableDeliverersProcessor implements Processor {
+
+
+        @Inject
+        OrderService orderService;
+
+
+        Map<Long, Integer> indisponibleCounters = new ConcurrentHashMap<>();
+        @Override
+        public void process(Exchange exchange) throws Exception {
+
+            Long orderId = exchange.getIn().getHeader("orderId", Long.class);
+            indisponibleCounters.put(orderId, indisponibleCounters.getOrDefault(orderId, 0) + 1);
+
+
+            int totalDeliveryMen = orderService.countTotalDeliveryMen();
+            if (indisponibleCounters.get(orderId) >= totalDeliveryMen) {
+                // Tous les livreurs sont indisponibles pour cette commande
+                Log.info("Aucun livreur disponible pour la commande ID: " + orderId);
+                orderService.noneDeliveryManUpdate(orderId);
+                // Réinitialiser le compteur pour cette commande
+                indisponibleCounters.remove(orderId);
+            }
         }
     }
 }
