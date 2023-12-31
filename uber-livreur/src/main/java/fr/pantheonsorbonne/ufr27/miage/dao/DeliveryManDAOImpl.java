@@ -14,13 +14,34 @@ public class DeliveryManDAOImpl implements DeliveryManDAO {
 
     @Override
     @Transactional
-    public DeliveryMan createNewDeliveryMan(String name, String vehicleType, double latPosition, double lonPosition){
-        DeliveryMan d = new DeliveryMan();
-        d.setName(name);
-        d.setVehicleType(vehicleType);
-        d.setLatPosition(latPosition);
-        d.setLonPosition(lonPosition);
-        em.persist(d);
-        return d;
+    public String getDeliveryManName() {
+        return (String) this.em.createQuery("Select d.name from DeliveryMan d").getSingleResult();
+
+    }
+
+    @Override
+    @Transactional
+    public Boolean isDeliveryManAvaible() {
+        return (Boolean) this.em.createQuery("Select d.isAvailable from DeliveryMan d").getSingleResult();
+
+    }
+
+    @Override
+    @Transactional
+    public String getDeliveryManVehicule() {
+        return (String) this.em.createQuery("Select d.vehicleType from DeliveryMan d").getSingleResult();
+    }
+
+    @Override
+    @Transactional
+    public long getIdDeliveryMan() {
+        return (long) this.em.createQuery("Select d.id from DeliveryMan d").getSingleResult();
+    }
+
+    @Override
+    @Transactional
+    public void setDeliveryManIsAvaible(long id, boolean b) {
+        DeliveryMan dm = em.find(DeliveryMan.class,id);
+        dm.setIsAvailable(b);
     }
 }

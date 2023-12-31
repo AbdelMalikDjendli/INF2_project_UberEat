@@ -1,33 +1,24 @@
 package fr.pantheonsorbonne.ufr27.miage.dao;
 
-
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 import fr.pantheonsorbonne.ufr27.miage.model.DarkKitchen;
+import fr.pantheonsorbonne.ufr27.miage.model.Order;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
 @ApplicationScoped
-public class DkDAOImpl implements DkDAO {
+public class OrderDAOImpl implements OrderDAO {
     @PersistenceContext(
             name = "mysql"
     )
     EntityManager em;
 
-
     @Override
     @Transactional
-    public DarkKitchen findDKByName(String name) {
-        return (DarkKitchen) this.em.createQuery("Select d from DarkKitchen d where d.name =: name").setParameter("name", name).getSingleResult();
-
+    public void newOrder(DarkKitchen dk) {
+        Order order = new Order();
+        order.setDk(dk);
+        em.persist(order);
     }
-
 }
-
-
-

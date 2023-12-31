@@ -8,4 +8,10 @@ public interface OrderService {
     OrderDTO getOrderDTOFromModel(long orderId);
     Order dkFoundUpdate(String dkName);
 
+    Order deliveryManUpdate(String dmName) ;
+    void noneDeliveryManUpdate(Long orderId);
+
+    int countTotalDeliveryMen();
+
+
 }

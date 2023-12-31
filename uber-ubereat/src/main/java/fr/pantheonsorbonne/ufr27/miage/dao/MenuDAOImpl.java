@@ -19,12 +19,6 @@ public class MenuDAOImpl implements MenuDAO {
     )
     EntityManager em;
 
-    public MenuDAOImpl() {
-    }
-
-    public Menu findMenuById(long id) {
-        return em.find(Menu.class, id);
-    }
 
     @Override
     @Transactional
