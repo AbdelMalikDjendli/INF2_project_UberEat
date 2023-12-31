@@ -83,7 +83,6 @@ public class CamelRoutes extends RouteBuilder {
                 else{
                     Log.info("Pas de restaurant disponible");
                 }
-                orderGateway.sendConfirmationToDarkkitchen(dkChoiceService.getDkName());
                 //remettre à 0
                 dkChoiceService.resetEstimations();
             }
