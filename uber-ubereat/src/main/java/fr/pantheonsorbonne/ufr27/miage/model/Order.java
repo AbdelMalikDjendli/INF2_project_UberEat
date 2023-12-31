@@ -58,4 +58,10 @@ public class Order {
     public void setDeliveryMan(DeliveryMan deliveryMan) {
         this.deliveryMan=deliveryMan;
     }
+
+    public String getName() {if (this.darkKitchen != null) {
+        return darkKitchen.getName();
+    } else {
+        return null; // Ou une valeur par défaut, comme "Non assigné"
+    }}
 }

@@ -11,7 +11,7 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "dk_id", referencedColumnName = "id")
-    private DarkKitchen dk; // Relation avec le menu
+    private DarkKitchen dk;
 
     public Long getId() {
         return id;
@@ -25,7 +25,7 @@ public class Order {
         return dk;
     }
 
-    public void setDk(DarkKitchen menu) {
+    public void setDk(DarkKitchen dk) {
         this.dk = dk;
     }
 

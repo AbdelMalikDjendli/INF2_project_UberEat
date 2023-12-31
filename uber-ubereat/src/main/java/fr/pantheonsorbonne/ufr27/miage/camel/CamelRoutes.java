@@ -32,8 +32,6 @@ public class CamelRoutes extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-
-
         camelContext.setTracing(true);
 
 
@@ -44,6 +42,7 @@ public class CamelRoutes extends RouteBuilder {
         from("sjms2:queue:M1.LIVREUR_DISPO_CONFIRMATION")
                 .process(deliveryProcessor);
 
+        //récéption des livreurs indispo
         from("sjms2:queue:M1.LIVREUR_INDISPO")
                 .process(noAvailableDeliverersProcessor);
 
@@ -88,18 +87,15 @@ public class CamelRoutes extends RouteBuilder {
     @ApplicationScoped
     private static class DeliveryProcessor implements Processor {
 
-
         @Inject
         OrderGateway orderGateway;
 
 
-
         @Override
         public void process(Exchange exchange) throws Exception {
-
+            // pr le 1er livreur :
+            //récupère le name
             String deliveryManName = exchange.getIn().getHeader("deliveryManName", String.class);
-
-
             // Appeler la méthode pour confirmer le premier livreur
             orderGateway.sendConfirmationToDeliveryMan( deliveryManName);
 
@@ -109,21 +105,21 @@ public class CamelRoutes extends RouteBuilder {
     @ApplicationScoped
     private static class NoAvailableDeliverersProcessor implements Processor {
 
-
         @Inject
         OrderService orderService;
-
 
         Map<Long, Integer> indisponibleCounters = new ConcurrentHashMap<>();
         @Override
         public void process(Exchange exchange) throws Exception {
 
+            //récup id commande
             Long orderId = exchange.getIn().getHeader("orderId", Long.class);
+            //incrémenter le compteur
             indisponibleCounters.put(orderId, indisponibleCounters.getOrDefault(orderId, 0) + 1);
 
-
+            //récup le nb de livreurs
             int totalDeliveryMen = orderService.countTotalDeliveryMen();
-            if (indisponibleCounters.get(orderId) >= totalDeliveryMen) {
+            if (indisponibleCounters.get(orderId) == totalDeliveryMen) {
                 // Tous les livreurs sont indisponibles pour cette commande
                 Log.info("Aucun livreur disponible pour la commande ID: " + orderId);
                 orderService.noneDeliveryManUpdate(orderId);

@@ -54,7 +54,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDTO getOrderDTOFromModel(long orderId) {
         Order orderModel = orderDAO.findOrderById(orderId);
         MenuDTO menuDto = new MenuDTO(orderModel.getMenu().getName(), orderModel.getMenu().getDescription());
-        return new OrderDTO( orderModel.getStatus(), menuDto);
+        return new OrderDTO( orderModel.getStatus(), menuDto, orderModel.getName());
     }
 
     /*
@@ -75,7 +75,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public Order deliveryManUpdate(String dmName) {
         Order orderModel = orderDAO.getLastOrder();
-        orderDAO.updateStatus(orderModel.getId(), "en cours de livraison ");
+        orderDAO.updateStatus(orderModel.getId(), "livreur trouvé");
         orderDAO.addDeliveryMan(orderModel.getId(), deliveryManDAO.findDMByName(dmName));
         deliveryManDAO.setIsAvaible(dmName,false);
         return orderModel;

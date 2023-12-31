@@ -2,19 +2,13 @@ package fr.pantheonsorbonne.ufr27.miage.camel;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.pantheonsorbonne.ufr27.miage.dao.DkDAO;
-import fr.pantheonsorbonne.ufr27.miage.dao.MenuDAO;
-import fr.pantheonsorbonne.ufr27.miage.dao.OrderDAO;
-import fr.pantheonsorbonne.ufr27.miage.dto.MenuDTO;
 import fr.pantheonsorbonne.ufr27.miage.dto.OrderDTO;
-import fr.pantheonsorbonne.ufr27.miage.model.Menu;
 import fr.pantheonsorbonne.ufr27.miage.model.Order;
 import fr.pantheonsorbonne.ufr27.miage.service.OrderService;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.jms.*;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.util.Random;
 
@@ -69,10 +63,10 @@ public class OrderGateway {
 
     public void sendOrderToDeliveryMen(long orderId, String dkName) {
         Random random = new Random();
-        int randomDistance = random.nextInt(20) + 1; // Générer une distance aléatoire
+        int randomDistance = random.nextInt(21) + 1; // Générer une distance aléatoire
 
         try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
-            // Créer un message contenant l'ID de la commande,l'ID de la Dark Kitchen et la distance
+            // Créer un message contenant l'ID de la commande,le nom de la Dark Kitchen et la distance
             TextMessage message = context.createTextMessage();
 
             message.setLongProperty("orderId", orderId); //à voir si utile ?
