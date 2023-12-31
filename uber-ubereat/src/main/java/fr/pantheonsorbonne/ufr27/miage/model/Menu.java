@@ -26,7 +26,7 @@ public class Menu {
 
     public String getPrice() {
         return price;
-    }
+    } // a utiliser pour la facture
 
     public Long getId() {
         return id;
@@ -51,4 +51,6 @@ public class Menu {
     public void setDescription(String description) {
         this.description = description;
     }
+
+
 }

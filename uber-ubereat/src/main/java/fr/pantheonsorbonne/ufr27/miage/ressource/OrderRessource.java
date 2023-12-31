@@ -1,4 +1,4 @@
-package fr.pantheonsorbonne.ufr27.miage.resources;
+package fr.pantheonsorbonne.ufr27.miage.ressource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import fr.pantheonsorbonne.ufr27.miage.camel.OrderGateway;
@@ -6,7 +6,6 @@ import fr.pantheonsorbonne.ufr27.miage.dao.OrderDAO;
 import fr.pantheonsorbonne.ufr27.miage.dto.OrderDTO;
 import fr.pantheonsorbonne.ufr27.miage.model.Order;
 import fr.pantheonsorbonne.ufr27.miage.service.OrderService;
-import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -16,7 +15,7 @@ import jakarta.ws.rs.core.UriBuilder;
 import java.net.URI;
 
 @Path("orders")
-public class OrderResource {
+public class OrderRessource {
 
     @Inject
     OrderService orderService;
@@ -34,8 +33,8 @@ public class OrderResource {
         Order createdOrder = orderService.createOrder(orderDTO);
 
         // Construire l'URL pour accéder à la commande créée
-        URI orderUri = UriBuilder.fromResource(OrderResource.class)
-                .path(OrderResource.class, "getOrderStatus")
+        URI orderUri = UriBuilder.fromResource(OrderRessource.class)
+                .path(OrderRessource.class, "getOrderStatus")
                 .build(createdOrder.getId());
 
         orderGateway.sendOrderToDarkkitchen(createdOrder.getId());

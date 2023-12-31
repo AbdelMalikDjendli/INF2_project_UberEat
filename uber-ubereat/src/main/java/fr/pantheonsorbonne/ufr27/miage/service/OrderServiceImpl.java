@@ -50,7 +50,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDTO getOrderDTOFromModel(long orderId) {
         Order orderModel = orderDAO.findOrderById(orderId);
         MenuDTO menuDto = new MenuDTO(orderModel.getMenu().getName(), orderModel.getMenu().getDescription());
-        return new OrderDTO( orderModel.getStatus(), menuDto);
+        return new OrderDTO(orderModel.getStatus(), menuDto);
     }
 
     /*
@@ -66,6 +66,13 @@ public class OrderServiceImpl implements OrderService {
         return orderModel;
     }
 
+    @Override
+    @Transactional
+    public String statusDelivering() {
+        Order orderModel = orderDAO.getLastOrder();
+        orderDAO.updateStatus(orderModel.getId(), "En cours de Livraison");
+        return "en cours de Livraison";
+    }
 
 
 
