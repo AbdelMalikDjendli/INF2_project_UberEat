@@ -26,7 +26,8 @@ public class CamelRoutes extends RouteBuilder {
     @Inject
     DkService dkService;
 
-
+    @Inject
+    OrderGateway orderGateway;
 
 
     @Override
@@ -44,6 +45,11 @@ public class CamelRoutes extends RouteBuilder {
         });
 
 
+        //demande de recupération de la commande par le livreur
+        from("sjms2:queue:M1.ASK_ORDER").process(exchange -> {
+            orderGateway.startDeliveryEvent();
+            Log.info("Commande en préparation");
+        });
     }
 
 

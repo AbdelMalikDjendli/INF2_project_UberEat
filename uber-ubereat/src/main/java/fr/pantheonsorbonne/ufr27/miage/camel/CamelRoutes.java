@@ -45,6 +45,10 @@ public class CamelRoutes extends RouteBuilder {
         //récéption des livreurs indispo
         from("sjms2:queue:M1.LIVREUR_INDISPO")
                 .process(noAvailableDeliverersProcessor);
+        // A FAIRE AVEC LE QRCODE
+        from("sjms2:queue:M1.ORDER_GIVEN_TO_DELIVERYMAN")
+                .process();
+
 
 
     }
