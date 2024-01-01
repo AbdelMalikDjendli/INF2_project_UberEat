@@ -49,4 +49,5 @@ public class OrderDAOImpl implements OrderDAO {
                 .setMaxResults(1)
                 .getSingleResult();
     }
+
 }

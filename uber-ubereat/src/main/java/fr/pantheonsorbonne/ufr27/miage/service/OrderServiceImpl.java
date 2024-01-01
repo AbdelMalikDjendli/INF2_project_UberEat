@@ -70,6 +70,13 @@ public class OrderServiceImpl implements OrderService {
         return orderModel;
     }
 
+    @Override
+    @Transactional
+    public String statusDelivering() {
+        Order orderModel = orderDAO.getLastOrder();
+        orderDAO.updateStatus(orderModel.getId(), "En cours de Livraison");
+        return "en cours de Livraison";
+    }
 
     @Override
     @Transactional

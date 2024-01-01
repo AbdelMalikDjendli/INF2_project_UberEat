@@ -7,9 +7,8 @@ import fr.pantheonsorbonne.ufr27.miage.model.Order;
 public interface OrderDAO {
     void updateStatus(long orderId, String status);
     void addDarkKitchen(long orderId, DarkKitchen dk);
-
+    Order findOrderById(long orderId);
     void addDeliveryMan(long orderId, DeliveryMan deliveryMan);
-    Order findOrderById(long id);
-
     Order getLastOrder();
+
 }

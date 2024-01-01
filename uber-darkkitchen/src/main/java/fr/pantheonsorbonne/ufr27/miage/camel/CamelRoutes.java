@@ -33,23 +33,26 @@ public class CamelRoutes extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-        //envoyer estimation
+        //envoyer estimation (pub/sub)
         from("sjms2:topic:M1.DK").unmarshal().json(OrderDTO.class)
                 .process(estimationProcessor)
                 .to("sjms2:queue:M1.DK_ESTIMATION");
 
-        //confirmation + création de la commande
-        from("sjms2:queue:M1." + dkService.getCurrentDkName()).unmarshal().json(OrderDTO.class).process(exchange -> {
+        //confirmation + création de la commande (P2P)
+        from("sjms2:queue:M1." + dkService.getCurrentDkName())
+                .unmarshal().json(OrderDTO.class).process(exchange -> {
             orderService.createOrder(exchange.getIn().getBody(OrderDTO.class).menu().name());
             Log.info("Commande en préparation");
         });
 
 
         //demande de recupération de la commande par le livreur
-        from("sjms2:queue:M1.ASK_ORDER").process(exchange -> {
-            orderGateway.startDeliveryEvent();
-            Log.info("Commande en préparation");
-        });
+        from("sjms2:queue:M1.ASK_ORDER")
+                .process(exchange -> {
+                    orderGateway.startDeliveryEvent();
+                    Log.info("la DK : fournie la Commande au Livreur ");
+                });
+
     }
 
 
