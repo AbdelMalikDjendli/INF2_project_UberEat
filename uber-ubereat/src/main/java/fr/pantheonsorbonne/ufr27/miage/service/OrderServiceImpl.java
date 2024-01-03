@@ -107,4 +107,11 @@ public class OrderServiceImpl implements OrderService {
        return orderDAO.countTotalOrder()>0 ? orderDAO.getLastOrder().getDeliveryMan().getName() : ""  ;
     }
 
+    @Override
+    @Transactional
+    public Order getCurrentOrder() {
+        return orderDAO.getLastOrder()  ;
+    }
+
+
 }

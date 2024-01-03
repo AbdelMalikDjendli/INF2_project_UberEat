@@ -69,6 +69,10 @@ public class CamelRoutes extends RouteBuilder {
                 .to("sjms2:queue:M1.CODE_RESPONSE_Paul").otherwise()
                 .to("sjms2:queue:M1.CODE_RESPONSE_Pierre");
 
+        from("sjms2:queue:M1.FACTURE").doTry().setHeader("subject", simple("Facture commande Uber Eat"))
+                .setHeader("to", simple("a.malik.djendli@gmail.com"))
+                .to("smtps://smtp.gmail.com:465?username=projetjava95@gmail.com&password=gbqe hnue xtsu ttuz");
+
     }
 
     @ApplicationScoped
@@ -104,6 +108,7 @@ public class CamelRoutes extends RouteBuilder {
                 orderService.updateOrderStatus("Livrée");
                 Log.info("Commande livrée");
                 //Envoyer facture
+                orderGateway.sendInvoice(orderService.getCurrentOrder());
             }
             else{
                 exchange.getMessage().setHeader("isGoodCode","false");

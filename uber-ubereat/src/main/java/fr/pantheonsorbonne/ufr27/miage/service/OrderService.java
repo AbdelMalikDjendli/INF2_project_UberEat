@@ -18,5 +18,7 @@ public interface OrderService {
 
     String getDeliveryManName();
 
+    Order getCurrentOrder();
+
 
 }

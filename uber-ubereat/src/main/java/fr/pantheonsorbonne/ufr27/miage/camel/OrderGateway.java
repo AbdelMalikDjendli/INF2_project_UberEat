@@ -3,6 +3,7 @@ package fr.pantheonsorbonne.ufr27.miage.camel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.pantheonsorbonne.ufr27.miage.dto.OrderDTO;
+import fr.pantheonsorbonne.ufr27.miage.model.Menu;
 import fr.pantheonsorbonne.ufr27.miage.model.Order;
 import fr.pantheonsorbonne.ufr27.miage.service.OrderService;
 import io.quarkus.logging.Log;
@@ -95,6 +96,28 @@ public class OrderGateway {
             TextMessage msg = context.createTextMessage(orderJson);
             context.createProducer().send(context.createQueue("M1."+deliveryManName), msg);
             Log.info("Message de confirmation envoyé au livreur  " + deliveryManName + " pour la commande ID: " + orderModel.getId());
+        }
+    }
+
+    public void sendInvoice(Order order) throws JsonProcessingException {
+        /*
+        OrderDTO orderDTO = orderService.getOrderDTOFromModel(orderId);
+        //On convertit l'orderDTO en json
+        ObjectMapper objectMapper = new ObjectMapper();
+        String orderJson = objectMapper.writeValueAsString(orderDTO);
+         */
+        Menu menu = order.getMenu();
+
+        try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
+            //On créer un message contenant l'orderDTO sous forme de json
+            TextMessage msg = context.createTextMessage("Votre commande : "+menu.getName()+
+                    "\n Montant total : "+menu.getPrice() +" € \n" +
+                    "Merci pour votre commande chez Uber Eat, à très bientôt !");
+            //On envoie l'order aux darkKitchen via le topic M1.DK
+            context.createProducer().send(context.createQueue("M1.FACTURE"), msg);
+            Log.info("Facture envoyé");
+        } catch (JMSRuntimeException e) {
+            Log.error("Erreur lors de l'envoi de la facture: ", e);
         }
     }
 }
