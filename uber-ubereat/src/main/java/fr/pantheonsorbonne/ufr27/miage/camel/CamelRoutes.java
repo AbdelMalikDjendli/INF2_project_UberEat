@@ -1,6 +1,8 @@
 package fr.pantheonsorbonne.ufr27.miage.camel;
 
 
+import fr.pantheonsorbonne.ufr27.miage.service.ConfirmationCodeService;
+import fr.pantheonsorbonne.ufr27.miage.service.DeliveryManService;
 import fr.pantheonsorbonne.ufr27.miage.service.DkChoiceService;
 import fr.pantheonsorbonne.ufr27.miage.service.OrderService;
 import io.quarkus.logging.Log;
@@ -29,6 +31,15 @@ public class CamelRoutes extends RouteBuilder {
     @Inject
     NoAvailableDeliverersProcessor noAvailableDeliverersProcessor;
 
+    @Inject
+    UpdateStatusProcessor updateStatusProcessor;
+
+    @Inject
+    ConfirmationCodeProcessor confirmationCodeProcessor;
+
+    @Inject
+    OrderService orderService;
+
     @Override
     public void configure() throws Exception {
 
@@ -46,7 +57,58 @@ public class CamelRoutes extends RouteBuilder {
         from("sjms2:queue:M1.LIVREUR_INDISPO")
                 .process(noAvailableDeliverersProcessor);
 
+        //Dk nous informe que le livreur à récupéré la commande
+        from("sjms2:queue:M1.ORDER_GIVEN_TO_DELIVERYMAN")
+                .process(updateStatusProcessor);
 
+
+        //Valide ou non la livraison
+        from("sjms2:queue:M1.CONFIRMATION_CODE")
+                .process(confirmationCodeProcessor).choice()
+                .when(header("dmName").isEqualTo("Paul"))
+                .to("sjms2:queue:M1.CODE_RESPONSE_Paul").otherwise()
+                .to("sjms2:queue:M1.CODE_RESPONSE_Pierre");
+
+    }
+
+    @ApplicationScoped
+    private static class ConfirmationCodeProcessor implements Processor {
+
+        @Inject
+        DkChoiceService dkChoiceService;
+
+        @Inject
+        OrderGateway orderGateway;
+
+        @Inject
+        ConfirmationCodeService confirmationCodeService;
+
+        @Inject
+        DeliveryManService deliveryManService;
+
+        @Inject
+        OrderService orderService;
+
+
+        @Override
+        public void process(Exchange exchange) throws Exception {
+            String body = exchange.getIn().getBody(String.class);
+            String correctCode = confirmationCodeService.getCurrentCode();
+            String dmName = exchange.getMessage().getHeader("dmName", String.class);
+            boolean isGoodDm = deliveryManService.isGoodDm(dmName);
+            if(isGoodDm && body.equals(correctCode)){
+                exchange.getMessage().setHeader("isGoodCode","true");
+                //mettre à jour le statut du livreur
+                deliveryManService.setDeliveryManStatus(dmName,true);
+                //mettre à jour le statut de la commande
+                orderService.updateOrderStatus("Livrée");
+                Log.info("Commande livrée");
+                //Envoyer facture
+            }
+            else{
+                exchange.getMessage().setHeader("isGoodCode","false");
+            }
+        }
     }
 
     @ApplicationScoped
@@ -132,6 +194,19 @@ public class CamelRoutes extends RouteBuilder {
                 indisponibleCounters.remove(orderId);
 
             }
+        }
+    }
+
+    @ApplicationScoped
+    private static class UpdateStatusProcessor implements Processor {
+
+        @Inject
+        OrderService orderService;
+
+        @Override
+        public void process(Exchange exchange) throws Exception {
+            orderService.updateOrderStatus("en cours de livraison");
+            Log.info("Commande en cours de livraison");
         }
     }
 }

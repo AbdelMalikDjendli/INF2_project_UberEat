@@ -94,4 +94,17 @@ public class OrderServiceImpl implements OrderService {
         return deliveryManDAO.countTotalDeliveryMen();
     }
 
+    @Override
+    @Transactional
+    public void updateOrderStatus(String status) {
+        Order orderModel = orderDAO.getLastOrder();
+        orderDAO.updateStatus(orderModel.getId(), status);
+    }
+
+    @Override
+    @Transactional
+    public String getDeliveryManName() {
+       return orderDAO.countTotalOrder()>0 ? orderDAO.getLastOrder().getDeliveryMan().getName() : ""  ;
+    }
+
 }

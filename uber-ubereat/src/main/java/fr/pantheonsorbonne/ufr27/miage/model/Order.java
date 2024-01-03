@@ -64,4 +64,8 @@ public class Order {
     } else {
         return null; // Ou une valeur par défaut, comme "Non assigné"
     }}
+
+    public DeliveryMan getDeliveryMan() {
+        return deliveryMan;
+    }
 }

@@ -45,8 +45,16 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     @Transactional
     public Order getLastOrder() {
-        return (Order) this.em.createQuery("SELECT o FROM Order o ORDER BY o.id DESC", Order.class)
+        return this.em.createQuery("SELECT o FROM Order o ORDER BY o.id DESC", Order.class)
                 .setMaxResults(1)
                 .getSingleResult();
+    }
+
+    @Override
+    @Transactional
+    public int countTotalOrder() {
+        Long count = em.createQuery("SELECT COUNT(d) FROM Order d", Long.class)
+                .getSingleResult();
+        return count.intValue();
     }
 }

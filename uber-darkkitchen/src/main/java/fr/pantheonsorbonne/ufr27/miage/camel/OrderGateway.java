@@ -21,4 +21,15 @@ public class OrderGateway {
         }
     }
 
+    // Event Message envoyé à UBER
+    public void startDeliveryEvent() {
+        try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
+            TextMessage message = context.createTextMessage("Delivery has started");
+            context.createProducer().send(context.createQueue("M1.ORDER_GIVEN_TO_DELIVERYMAN"), message);
+            //Log.info("Message envoyé à Uber Eats : Commande " + orderId + " prête");
+            Log.info("Commande En Route");
+        } catch (JMSRuntimeException e) {
+            Log.error("Error : ORDER_GIVEN_TO_DELIVERYMAN", e);
+        }
+    }
 }

@@ -2,6 +2,7 @@ package fr.pantheonsorbonne.ufr27.miage.camel;
 
 
 import fr.pantheonsorbonne.ufr27.miage.dto.OrderDTO;
+import fr.pantheonsorbonne.ufr27.miage.service.ConfirmationCodeService;
 import fr.pantheonsorbonne.ufr27.miage.service.DeliveryManService;
 import fr.pantheonsorbonne.ufr27.miage.service.OrderService;
 import io.quarkus.logging.Log;
@@ -25,6 +26,12 @@ public class CamelRoutes extends RouteBuilder {
 
     @Inject
     OrderService orderService;
+
+    @Inject
+    OrderGateway orderGateway;
+
+    @Inject
+    ConfirmationCodeService confirmationCodeService;
 
 
     @Override
@@ -50,8 +57,13 @@ public class CamelRoutes extends RouteBuilder {
             orderService.createOrder(exchange.getIn().getBody(OrderDTO.class).dkName());
             //le livreur n'est plus dispo
             deliveryManService.setDeliveryManIsAvaible(deliveryManService.getIdDeliveryMan(),false);
-            Log.info("Commande en livraison");
+            //récupère la commande auprès de la DK
+            orderGateway.askOrderToDK();
         });
+
+        from("sjms2:queue:M1.CODE_RESPONSE_" + deliveryManService.getNameDeliveryMan())
+                .process(exchange -> confirmationCodeService.setGoodCode(exchange.getMessage().getHeader("isGoodCode", String.class
+                )));
 
     }
 

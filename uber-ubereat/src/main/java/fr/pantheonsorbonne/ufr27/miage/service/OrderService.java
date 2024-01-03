@@ -9,9 +9,14 @@ public interface OrderService {
     Order dkFoundUpdate(String dkName);
 
     Order deliveryManUpdate(String dmName) ;
+
     void noneDeliveryManUpdate(Long orderId);
 
     int countTotalDeliveryMen();
+
+    void updateOrderStatus(String status);
+
+    String getDeliveryManName();
 
 
 }

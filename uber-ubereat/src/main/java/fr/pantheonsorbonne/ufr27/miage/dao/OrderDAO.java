@@ -12,4 +12,8 @@ public interface OrderDAO {
     Order findOrderById(long id);
 
     Order getLastOrder();
+
+    int countTotalOrder();
+
+
 }

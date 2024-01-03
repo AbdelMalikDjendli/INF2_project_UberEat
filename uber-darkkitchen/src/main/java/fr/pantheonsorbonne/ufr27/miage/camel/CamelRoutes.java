@@ -26,6 +26,9 @@ public class CamelRoutes extends RouteBuilder {
     @Inject
     DkService dkService;
 
+    @Inject
+    OrderGateway orderGateway;
+
 
 
 
@@ -42,6 +45,12 @@ public class CamelRoutes extends RouteBuilder {
             orderService.createOrder(exchange.getIn().getBody(OrderDTO.class).menu().name());
             Log.info("Commande en préparation");
         });
+
+        from("sjms2:queue:M1.ASK_ORDER")
+                .process(exchange -> {
+                    orderGateway.startDeliveryEvent();
+                    Log.info("la DK : fournie la Commande au Livreur ");
+                });
 
 
     }
