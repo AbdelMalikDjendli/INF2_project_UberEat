@@ -142,7 +142,7 @@ public class CamelRoutes extends RouteBuilder {
                 }
             }
             //Si toutes les darkkitchen ont répondu alors on envoi la confirmation à la darkkitchen choisi
-            if(dkChoiceService.getNumberOfEstimation()==1){
+            if(dkChoiceService.getNumberOfEstimation()==2){
 
                 if(dkChoiceService.getDkName()!=null) {
                     orderGateway.sendConfirmationToDarkkitchen(dkChoiceService.getDkName());
