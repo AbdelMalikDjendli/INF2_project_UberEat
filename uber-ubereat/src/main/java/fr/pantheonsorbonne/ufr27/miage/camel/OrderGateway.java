@@ -110,9 +110,11 @@ public class OrderGateway {
 
         try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
             //On créer un message contenant l'orderDTO sous forme de json
-            TextMessage msg = context.createTextMessage("Votre commande : "+menu.getName()+
-                    "\n Montant total : "+menu.getPrice() +" € \n" +
-                    "Merci pour votre commande chez Uber Eat, à très bientôt !");
+            TextMessage msg = context.createTextMessage("Chère Client,\n\n Voici la facture de votre commande.\n\n"+
+                    "Votre commande : "+menu.getName() +
+                    "\nMontant total : "+menu.getPrice() +" € \n\n" +
+                    "Merci pour votre commande chez Uber Eat," + "\n" +
+                    "Bon appétit, à très bientôt !");
             //On envoie l'order aux darkKitchen via le topic M1.DK
             context.createProducer().send(context.createQueue("M1.FACTURE"), msg);
             Log.info("Facture envoyé");

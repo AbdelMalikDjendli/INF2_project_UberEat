@@ -12,12 +12,24 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @ApplicationScoped
 public class CamelRoutes extends RouteBuilder {
+    @ConfigProperty(name = "fr.pantheonsorbonne.ufr27.miage.smtp.user")
+    String smtpUser;
+    @ConfigProperty(name = "fr.pantheonsorbonne.ufr27.miage.smtp.password")
+    String smtpPassword;
+    @ConfigProperty(name = "fr.pantheonsorbonne.ufr27.miage.smtp.host")
+    String smtpHost;
+    @ConfigProperty(name = "fr.pantheonsorbonne.ufr27.miage.smtp.port")
+    String smtpPort;
+    @ConfigProperty(name = "fr.pantheonsorbonne.ufr27.miage.smtp.from")
+    String smtpFrom;
 
     @Inject
     CamelContext camelContext;
@@ -67,8 +79,12 @@ public class CamelRoutes extends RouteBuilder {
                 .to("sjms2:queue:M1.CODE_RESPONSE_Paul").otherwise()
                 .to("sjms2:queue:M1.CODE_RESPONSE_Pierre");
 
-        from("sjms2:queue:M1.FACTURE").doTry().setHeader("subject", simple("Facture commande Uber Eat"))
-                .setHeader("to", simple("a.malik.djendli@gmail.com"))
+
+        from("sjms2:queue:M1.FACTURE")
+                .doTry()
+                .setHeader("subject", simple("Votre Facture | Commande UberEat"))
+                .setHeader("to", simple("samraabdul.09@gmail.com"))
+                //.to("smtps:" + smtpHost + ":" + smtpPort + "?username=" + smtpFrom + "&password=" + smtpPassword );
                 .to("smtps://smtp.gmail.com:465?username=projetjava95@gmail.com&password=gbqe hnue xtsu ttuz");
 
     }
