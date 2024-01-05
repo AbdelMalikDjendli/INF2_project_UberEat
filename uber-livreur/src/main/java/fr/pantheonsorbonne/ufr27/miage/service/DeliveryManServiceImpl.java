@@ -11,8 +11,6 @@ public class DeliveryManServiceImpl implements DeliveryManService{
     @Inject
     DeliveryManDAO deliveryManDAO;
 
-    @Inject
-    OrderDAO orderDAO;
 
     @Override
     public boolean isDeliveryManAvailable() {
@@ -38,8 +36,5 @@ public class DeliveryManServiceImpl implements DeliveryManService{
     public String getNameDeliveryMan() {
         return deliveryManDAO.getDeliveryManName();
     }
-
-
-
 
 }

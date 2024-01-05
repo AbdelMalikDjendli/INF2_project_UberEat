@@ -14,7 +14,6 @@ public class ConfirmationCodeRessource {
     @Inject
     ConfirmationCodeService confirmationCodeService;
 
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getNewCode() {

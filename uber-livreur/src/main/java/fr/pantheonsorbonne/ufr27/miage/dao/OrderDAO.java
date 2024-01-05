@@ -6,6 +6,6 @@ import fr.pantheonsorbonne.ufr27.miage.model.Order;
 
 public interface OrderDAO {
     void newOrder(DarkKitchen dk);
-    int countTotalOrder();
+
 
 }

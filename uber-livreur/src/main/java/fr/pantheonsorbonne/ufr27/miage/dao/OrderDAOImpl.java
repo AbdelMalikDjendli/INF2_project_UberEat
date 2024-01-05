@@ -22,14 +22,5 @@ public class OrderDAOImpl implements OrderDAO {
         em.persist(order);
     }
 
-    @Override
-    @Transactional
-    public int countTotalOrder() {
-        Long count = em.createQuery("SELECT COUNT(d) FROM Order d", Long.class)
-                .getSingleResult();
-        return count.intValue();
-    }
-
-
 
 }

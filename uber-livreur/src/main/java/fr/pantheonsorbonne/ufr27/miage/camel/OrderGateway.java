@@ -21,8 +21,6 @@ public class OrderGateway {
     @Inject
     ConnectionFactory connectionFactory;
 
-    @Inject
-    OrderService orderService;
 
     @Inject
     DeliveryManService deliveryManService;

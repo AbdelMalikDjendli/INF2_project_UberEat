@@ -16,9 +16,6 @@ public class OderServiceImpl implements OrderService{
     @Inject
     DkDAO dkDAO;
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Override
     public void createOrder(String dKname) {
        orderDAO.newOrder(dkDAO.findDKByName(dKname));

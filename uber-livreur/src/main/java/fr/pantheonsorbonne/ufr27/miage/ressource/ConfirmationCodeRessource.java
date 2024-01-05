@@ -22,17 +22,12 @@ import java.util.ArrayList;
 @Path("code")
 public class ConfirmationCodeRessource {
 
-    @Inject
-    OrderService orderService;
 
     @Inject
     OrderGateway orderGateway;
 
     @Inject
     ConfirmationCodeService confirmationCodeService;
-
-    @Inject
-    OrderDAO orderDAO;
 
     @Inject
     DeliveryManService deliveryManService;

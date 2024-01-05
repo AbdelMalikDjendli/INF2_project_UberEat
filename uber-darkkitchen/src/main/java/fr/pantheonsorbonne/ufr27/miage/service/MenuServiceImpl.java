@@ -14,8 +14,6 @@ import java.util.List;
 @ApplicationScoped
 public class MenuServiceImpl implements MenuService {
 
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @Inject
     MenuDAO menuDAO;

@@ -6,6 +6,7 @@ import java.util.List;
 @Entity
 @Table(name = "dark_kitchens")
 public class DarkKitchen {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -13,15 +14,5 @@ public class DarkKitchen {
     @Column(name = "name")
     private String name;
 
-    /*
-    @Column(name = "address")
-    private String address;
 
-
-    @OneToMany(mappedBy = "darkKitchen")
-    private List<Menu> menus;
-
-     */
-
-    // constructors, getters, and setters
 }

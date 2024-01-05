@@ -11,16 +11,6 @@ public class OrderGateway {
     @Inject
     ConnectionFactory connectionFactory;
 
-    public void sendOrderReadyMessage(long orderId) {
-        try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
-            TextMessage message = context.createTextMessage(Long.toString(orderId));
-            context.createProducer().send(context.createQueue("M1.DK_READY"), message);
-            Log.info("Message envoyé à Uber Eats : Commande " + orderId + " prête");
-        } catch (JMSRuntimeException e) {
-            Log.error("Erreur lors de l'envoi du message 'Commande prête': ", e);
-        }
-    }
-
     // Event Message envoyé à UBER
     public void startDeliveryEvent() {
         try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {

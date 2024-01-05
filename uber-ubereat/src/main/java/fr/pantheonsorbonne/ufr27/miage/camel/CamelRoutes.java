@@ -37,8 +37,6 @@ public class CamelRoutes extends RouteBuilder {
     @Inject
     ConfirmationCodeProcessor confirmationCodeProcessor;
 
-    @Inject
-    OrderService orderService;
 
     @Override
     public void configure() throws Exception {
@@ -77,9 +75,6 @@ public class CamelRoutes extends RouteBuilder {
 
     @ApplicationScoped
     private static class ConfirmationCodeProcessor implements Processor {
-
-        @Inject
-        DkChoiceService dkChoiceService;
 
         @Inject
         OrderGateway orderGateway;

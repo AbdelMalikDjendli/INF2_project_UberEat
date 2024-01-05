@@ -15,9 +15,7 @@ public class Menu {
     @Column(name = "description")
     private String description;
 
-    // Constructors
-    public Menu() {
-    }
+
 
     public Long getId() {
         return id;

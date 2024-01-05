@@ -16,7 +16,6 @@ public interface OrderService {
 
     void updateOrderStatus(String status);
 
-    String getDeliveryManName();
 
     Order getCurrentOrder();
 
