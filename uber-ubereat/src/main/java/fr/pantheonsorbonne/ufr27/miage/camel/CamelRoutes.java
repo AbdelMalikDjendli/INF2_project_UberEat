@@ -152,6 +152,8 @@ public class CamelRoutes extends RouteBuilder {
                     dkChoiceService.setDkName(exchange.getMessage().getHeader("dk", String.class));
                 }
             }
+            Thread.sleep(2000); // Délai de 2 secondes
+
             //Si toutes les darkkitchen ont répondu alors on envoi la confirmation à la darkkitchen choisi
             if(dkChoiceService.getNumberOfEstimation()==2){
 
