@@ -12,8 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.concurrent.CompletableFuture;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -36,38 +34,23 @@ public class ConfirmationCodeResourceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-
     @Test
     void testConfirmDeliveryWithGoodCode() throws Exception {
         CodeDTO codeDTO = new CodeDTO("1234");
 
-        // Créez un CompletableFuture pour simuler le comportement asynchrone
-        CompletableFuture<Void> confirmationFuture = new CompletableFuture<>();
-
-        // Définissez le comportement simulé du mock ConfirmationCodeService
+        // Défini le comportement simulé du mock ConfirmationCodeService
         when(confirmationCodeService.isGoodCode()).thenReturn("true");
 
-        // Définissez le comportement du mock CompletableFuture
-        doAnswer(invocation -> {
-            confirmationFuture.complete(null);
-            return null;
-        }).when(confirmationFuture).thenRun(any());
-
-        // Testez la méthode confirmDelivery
+        // Teste la méthode confirmDelivery
         Response response = confirmationCodeResource.confirmDelivery(codeDTO);
 
-        // Vérifiez que la méthode sendConfirmationCode du mock OrderGateway a été appelée
+        // Vérifie que la méthode sendConfirmationCode du mock OrderGateway a été appelée
         verify(orderGateway).sendConfirmationCode("1234");
 
-        // Attendez l'achèvement du traitement asynchrone
-        confirmationFuture.get();
+        // Vérifie que la méthode setDeliveryManIsAvaible du mock DeliveryManService a été appelée
+        verify(deliveryManService).setDeliveryManIsAvaible(anyLong(), eq(true));
 
-        // Vérifiez que la méthode setDeliveryManIsAvaible du mock DeliveryManService a été appelée
-        verify(deliveryManService).setDeliveryManIsAvaible(any(), eq(true));
-
-        // Vérifiez que le statut de la réponse est accepté (202)
-        assertEquals(202, response.getStatus());
-
+        // Vérifie que le statut de la réponse est accepté (202)
+        assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
     }
-
 }
