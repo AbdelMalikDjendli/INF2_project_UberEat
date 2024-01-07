@@ -53,4 +53,36 @@ public class ConfirmationCodeResourceTest {
         // Vérifie que le statut de la réponse est accepté (202)
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
     }
+
+    /*
+    @Test
+    void testConfirmDeliveryWithBadCode() throws Exception {
+        // Arrange
+        CodeDTO codeDTO = new CodeDTO("5678");
+        when(confirmationCodeService.isGoodCode()).thenReturn("false");
+
+        // Act
+        Response response = confirmationCodeResource.confirmDelivery(codeDTO);
+
+        // Assert
+        verify(orderGateway).sendConfirmationCode("5678");
+
+        assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
+    }
+
+    @Test
+    void testConfirmDeliveryWithUnknownCode() throws Exception {
+        // Arrange
+        CodeDTO codeDTO = new CodeDTO("9999");
+        when(confirmationCodeService.isGoodCode()).thenReturn(null);
+
+        // Act
+        Response response = confirmationCodeResource.confirmDelivery(codeDTO);
+
+        // Assert
+        verify(orderGateway).sendConfirmationCode("9999");
+        verify(deliveryManService).setDeliveryManIsAvaible(any(), eq(true));
+        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatus());
+    }
+    */
 }
