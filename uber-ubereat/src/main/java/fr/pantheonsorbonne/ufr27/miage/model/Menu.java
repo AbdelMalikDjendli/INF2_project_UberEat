@@ -46,4 +46,9 @@ public class Menu {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
 }
+
