@@ -9,9 +9,8 @@
     <packaging>pom</packaging>
     <name>project-m1</name>
     <modules>
-        <module>uber-livreur</module>
-        <module>ticket-vendor</module>
         <module>uber-commons</module>
+        <module>uber-livreur</module>
         <module>uber-darkkitchen</module>
         <module>uber-ubereat</module>
 
