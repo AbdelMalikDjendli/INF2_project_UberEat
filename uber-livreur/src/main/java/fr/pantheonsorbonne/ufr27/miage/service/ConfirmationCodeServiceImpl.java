@@ -3,7 +3,7 @@ package fr.pantheonsorbonne.ufr27.miage.service;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class ConfirmationCodeServiceImpl implements ConfirmationCodeService{
+public class ConfirmationCodeServiceImpl implements ConfirmationCodeService {
     String isGoodCode;
 
     @Override

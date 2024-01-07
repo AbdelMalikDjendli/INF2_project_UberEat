@@ -1,12 +1,11 @@
 package fr.pantheonsorbonne.ufr27.miage.service;
 
 import fr.pantheonsorbonne.ufr27.miage.dao.DeliveryManDAO;
-import fr.pantheonsorbonne.ufr27.miage.dao.OrderDAO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public class DeliveryManServiceImpl implements DeliveryManService{
+public class DeliveryManServiceImpl implements DeliveryManService {
 
     @Inject
     DeliveryManDAO deliveryManDAO;
@@ -28,8 +27,8 @@ public class DeliveryManServiceImpl implements DeliveryManService{
     }
 
     @Override
-    public void setDeliveryManIsAvaible(long id,boolean b) {
-        deliveryManDAO.setDeliveryManIsAvaible(id,b);
+    public void setDeliveryManIsAvaible(long id, boolean b) {
+        deliveryManDAO.setDeliveryManIsAvaible(id, b);
     }
 
     @Override

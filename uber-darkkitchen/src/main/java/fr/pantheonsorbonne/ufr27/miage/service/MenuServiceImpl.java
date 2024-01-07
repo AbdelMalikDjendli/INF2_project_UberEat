@@ -5,8 +5,6 @@ import fr.pantheonsorbonne.ufr27.miage.dao.MenuDAO;
 import fr.pantheonsorbonne.ufr27.miage.model.Menu;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
 import java.util.List;

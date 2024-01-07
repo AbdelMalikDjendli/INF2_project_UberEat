@@ -18,13 +18,12 @@ public class Order {
 
 
     @ManyToOne
-    @JoinColumn(name = "dk_id", referencedColumnName = "id",nullable = true)
+    @JoinColumn(name = "dk_id", referencedColumnName = "id", nullable = true)
     private DarkKitchen darkKitchen;
 
     @ManyToOne
-    @JoinColumn(name = "dm_id", referencedColumnName = "id",nullable = true)
+    @JoinColumn(name = "dm_id", referencedColumnName = "id", nullable = true)
     private DeliveryMan deliveryMan;
-
 
 
     public Long getId() {
@@ -56,16 +55,17 @@ public class Order {
     }
 
     public void setDeliveryMan(DeliveryMan deliveryMan) {
-        this.deliveryMan=deliveryMan;
+        this.deliveryMan = deliveryMan;
     }
 
-    public String getName() {if (this.darkKitchen != null) {
+    public String getDkName() {if (this.darkKitchen != null) {
         return darkKitchen.getName();
     } else {
-        return null; // Ou une valeur par défaut, comme "Non assigné"
+        return null;
     }}
 
     public DeliveryMan getDeliveryMan() {
         return deliveryMan;
     }
+
 }

@@ -1,9 +1,10 @@
 package fr.pantheonsorbonne.ufr27.miage.model;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "delivery_men")
-public class DeliveryMan {
+public class DeliveryMen {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -12,14 +13,11 @@ public class DeliveryMan {
     @Column(name = "name", nullable = false, length = 45)
     private String name;
 
-    @Column(name = "vehicleType", nullable = false, length = 45)
+    @Column(name = "vehiculeType", nullable = false, length = 45)
     private String vehicleType;
 
     @Column(name = "is_available")
-    private boolean isAvailable = false;
-
-    public DeliveryMan() {
-    }
+    private Boolean isAvailable = true;
 
 
     public String getName() {

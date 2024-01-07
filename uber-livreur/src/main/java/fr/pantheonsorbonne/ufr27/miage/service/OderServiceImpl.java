@@ -4,12 +4,10 @@ import fr.pantheonsorbonne.ufr27.miage.dao.DkDAO;
 import fr.pantheonsorbonne.ufr27.miage.dao.OrderDAO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 
 
 @ApplicationScoped
-public class OderServiceImpl implements OrderService{
+public class OderServiceImpl implements OrderService {
     @Inject
     OrderDAO orderDAO;
 
@@ -18,7 +16,7 @@ public class OderServiceImpl implements OrderService{
 
     @Override
     public void createOrder(String dKname) {
-       orderDAO.newOrder(dkDAO.findDKByName(dKname));
+        orderDAO.newOrder(dkDAO.findDKByName(dKname));
     }
 
 

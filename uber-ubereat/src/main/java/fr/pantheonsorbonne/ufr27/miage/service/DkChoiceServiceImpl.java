@@ -13,10 +13,11 @@ public class DkChoiceServiceImpl implements DkChoiceService {
     public void setMinEstimation(int estimation) {
         this.currentEstimation = estimation;
     }
+
     @Override
-     public void setNumberOfEstimation(){
+    public void setNumberOfEstimation() {
         this.numberOfEstimation++;
-     }
+    }
 
     @Override
     public void setDkName(String name) {

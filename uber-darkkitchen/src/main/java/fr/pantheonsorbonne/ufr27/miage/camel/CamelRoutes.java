@@ -30,8 +30,6 @@ public class CamelRoutes extends RouteBuilder {
     OrderGateway orderGateway;
 
 
-
-
     @Override
     public void configure() throws Exception {
 
@@ -49,7 +47,6 @@ public class CamelRoutes extends RouteBuilder {
         from("sjms2:queue:M1.ASK_ORDER")
                 .process(exchange -> {
                     orderGateway.startDeliveryEvent();
-                    Log.info("la DK : fournie la Commande au Livreur ");
                 });
 
 

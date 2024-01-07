@@ -8,7 +8,6 @@ import fr.pantheonsorbonne.ufr27.miage.dto.MenuDTO;
 import fr.pantheonsorbonne.ufr27.miage.dto.OrderDTO;
 import fr.pantheonsorbonne.ufr27.miage.model.Menu;
 import fr.pantheonsorbonne.ufr27.miage.model.Order;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -54,7 +53,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDTO getOrderDTOFromModel(long orderId) {
         Order orderModel = orderDAO.findOrderById(orderId);
         MenuDTO menuDto = new MenuDTO(orderModel.getMenu().getName(), orderModel.getMenu().getDescription());
-        return new OrderDTO( orderModel.getStatus(), menuDto, orderModel.getName());
+        return new OrderDTO(menuDto, orderModel.getDkName());
     }
 
     /*
@@ -77,7 +76,7 @@ public class OrderServiceImpl implements OrderService {
         Order orderModel = orderDAO.getLastOrder();
         orderDAO.updateStatus(orderModel.getId(), "livreur trouvé");
         orderDAO.addDeliveryMan(orderModel.getId(), deliveryManDAO.findDMByName(dmName));
-        deliveryManDAO.setIsAvaible(dmName,false);
+        deliveryManDAO.setIsAvaible(dmName, false);
         return orderModel;
     }
 
@@ -105,7 +104,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order getCurrentOrder() {
-        return orderDAO.getLastOrder()  ;
+        return orderDAO.getLastOrder();
     }
 
 

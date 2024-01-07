@@ -13,7 +13,6 @@ public interface OrderDAO {
 
     Order getLastOrder();
 
-    int countTotalOrder();
 
 
 }

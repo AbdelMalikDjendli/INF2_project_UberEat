@@ -5,13 +5,12 @@ import fr.pantheonsorbonne.ufr27.miage.dto.OrderDTO;
 import fr.pantheonsorbonne.ufr27.miage.service.ConfirmationCodeService;
 import fr.pantheonsorbonne.ufr27.miage.service.DeliveryManService;
 import fr.pantheonsorbonne.ufr27.miage.service.OrderService;
-import io.quarkus.logging.Log;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class CamelRoutes extends RouteBuilder {
@@ -56,7 +55,7 @@ public class CamelRoutes extends RouteBuilder {
             //ajouter la commande à la bdd
             orderService.createOrder(exchange.getIn().getBody(OrderDTO.class).dkName());
             //le livreur n'est plus dispo
-            deliveryManService.setDeliveryManIsAvaible(deliveryManService.getIdDeliveryMan(),false);
+            deliveryManService.setDeliveryManIsAvaible(deliveryManService.getIdDeliveryMan(), false);
             //récupère la commande auprès de la DK
             orderGateway.askOrderToDK();
         });
@@ -66,7 +65,6 @@ public class CamelRoutes extends RouteBuilder {
                 )));
 
     }
-
 
 
     @ApplicationScoped

@@ -1,7 +1,6 @@
 package fr.pantheonsorbonne.ufr27.miage.dao;
 
 import fr.pantheonsorbonne.ufr27.miage.model.DeliveryMan;
-import fr.pantheonsorbonne.ufr27.miage.model.Order;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -25,7 +24,7 @@ public class DeliveryManDAOImpl implements DeliveryManDAO {
 
     @Override
     @Transactional
-    public void setIsAvaible(String deliveryMenName,boolean b) {
+    public void setIsAvaible(String deliveryMenName, boolean b) {
         DeliveryMan dm = findDMByName(deliveryMenName);
         dm.setIsAvailable(b);
     }

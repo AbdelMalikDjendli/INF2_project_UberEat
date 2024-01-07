@@ -6,17 +6,18 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public class DeliveryManServiceImpl implements  DeliveryManService{
+public class DeliveryManServiceImpl implements DeliveryManService {
     @Inject
     DeliveryManDAO deliveryManDAO;
 
     @Inject
     OrderDAO orderDAO;
-    public void setDeliveryManStatus(String name,boolean isAvailable){
-        deliveryManDAO.setIsAvaible(name,isAvailable);
+
+    public void setDeliveryManStatus(String name, boolean isAvailable) {
+        deliveryManDAO.setIsAvaible(name, isAvailable);
     }
 
-    public boolean isGoodDm(String dmName){
+    public boolean isGoodDm(String dmName) {
         return deliveryManDAO.findDMByName(dmName).getId() == orderDAO.getLastOrder().getDeliveryMan().getId();
     }
 }

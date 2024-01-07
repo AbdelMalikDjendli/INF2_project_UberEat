@@ -1,17 +1,10 @@
 package fr.pantheonsorbonne.ufr27.miage.camel;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.pantheonsorbonne.ufr27.miage.dto.OrderDTO;
-import fr.pantheonsorbonne.ufr27.miage.model.Order;
 import fr.pantheonsorbonne.ufr27.miage.service.DeliveryManService;
-import fr.pantheonsorbonne.ufr27.miage.service.OrderService;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.jms.*;
-
-import java.util.Random;
 
 
 @ApplicationScoped
@@ -25,7 +18,7 @@ public class OrderGateway {
     @Inject
     DeliveryManService deliveryManService;
 
-    public void askOrderToDK(){
+    public void askOrderToDK() {
         try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
             TextMessage msg = context.createTextMessage("ask to take order");
             context.createProducer().send(context.createQueue("M1.ASK_ORDER"), msg);
@@ -34,7 +27,7 @@ public class OrderGateway {
         }
     }
 
-    public void sendConfirmationCode(String code){
+    public void sendConfirmationCode(String code) {
         try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
             TextMessage msg = context.createTextMessage(code);
             msg.setStringProperty("dmName", deliveryManService.getNameDeliveryMan());

@@ -19,11 +19,6 @@ public class Menu {
     private String price;
 
 
-    // Constructors
-    public Menu() {
-    }
-    // Getters and Setters
-
     public String getPrice() {
         return price;
     }

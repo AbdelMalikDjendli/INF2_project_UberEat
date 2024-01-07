@@ -5,7 +5,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import java.util.Random;
 
 @ApplicationScoped
-public class ConfirmationCodeServiceImpl implements ConfirmationCodeService{
+public class ConfirmationCodeServiceImpl implements ConfirmationCodeService {
     String currentCode;
 
     public String getCurrentCode() {
@@ -19,7 +19,7 @@ public class ConfirmationCodeServiceImpl implements ConfirmationCodeService{
     @Override
     public String generateCode() {
         StringBuilder code = new StringBuilder();
-        for(int i = 0;i<4;i++){
+        for (int i = 0; i < 4; i++) {
             Random random = new Random();
             int randomNumber = random.nextInt(10);
             code.append(Integer.toString(randomNumber));

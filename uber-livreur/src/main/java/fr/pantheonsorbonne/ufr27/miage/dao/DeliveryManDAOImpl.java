@@ -1,6 +1,6 @@
 package fr.pantheonsorbonne.ufr27.miage.dao;
 
-import fr.pantheonsorbonne.ufr27.miage.model.DeliveryMan;
+import fr.pantheonsorbonne.ufr27.miage.model.DeliveryMen;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -15,33 +15,33 @@ public class DeliveryManDAOImpl implements DeliveryManDAO {
     @Override
     @Transactional
     public String getDeliveryManName() {
-        return (String) this.em.createQuery("Select d.name from DeliveryMan d").getSingleResult();
+        return (String) this.em.createQuery("Select d.name from DeliveryMen d").getSingleResult();
 
     }
 
     @Override
     @Transactional
     public Boolean isDeliveryManAvaible() {
-        return (Boolean) this.em.createQuery("Select d.isAvailable from DeliveryMan d").getSingleResult();
+        return (Boolean) this.em.createQuery("Select d.isAvailable from DeliveryMen d").getSingleResult();
 
     }
 
     @Override
     @Transactional
     public String getDeliveryManVehicule() {
-        return (String) this.em.createQuery("Select d.vehicleType from DeliveryMan d").getSingleResult();
+        return (String) this.em.createQuery("Select d.vehicleType from DeliveryMen d").getSingleResult();
     }
 
     @Override
     @Transactional
     public long getIdDeliveryMan() {
-        return (long) this.em.createQuery("Select d.id from DeliveryMan d").getSingleResult();
+        return (long) this.em.createQuery("Select d.id from DeliveryMen d").getSingleResult();
     }
 
     @Override
     @Transactional
     public void setDeliveryManIsAvaible(long id, boolean b) {
-        DeliveryMan dm = em.find(DeliveryMan.class,id);
+        DeliveryMen dm = em.find(DeliveryMen.class, id);
         dm.setIsAvailable(b);
     }
 }

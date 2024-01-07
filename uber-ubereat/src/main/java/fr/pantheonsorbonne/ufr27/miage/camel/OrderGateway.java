@@ -52,11 +52,11 @@ public class OrderGateway {
         try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
             //On envoie la commande à la darkkitchen choisi en guise de confirmation
             TextMessage msg = context.createTextMessage(orderJson);
-            context.createProducer().send(context.createQueue("M1."+dkName), msg);
-            Log.info("La darkkitchen choisi est :"+ dkName);
+            context.createProducer().send(context.createQueue("M1." + dkName), msg);
+            Log.info("La darkkitchen choisi est :" + dkName);
 
             //envoyer commande aux livreurs
-            sendOrderToDeliveryMen(orderModel.getId(),dkName);
+            sendOrderToDeliveryMen(orderModel.getId(), dkName);
         } catch (JMSRuntimeException e) {
             Log.error("Erreur lors de l'envoi de la confirmation: ", e);
         }
@@ -83,7 +83,7 @@ public class OrderGateway {
     }
 
 
-    public void sendConfirmationToDeliveryMan( String deliveryManName) throws JsonProcessingException {
+    public void sendConfirmationToDeliveryMan(String deliveryManName) throws JsonProcessingException {
         //On récupère la commande - mettre à jour la bdd
         Order orderModel = orderService.deliveryManUpdate(deliveryManName);
         //On convertit l'order en orderDTO
@@ -91,28 +91,22 @@ public class OrderGateway {
         //On convertit l'orderDTO en Json
         ObjectMapper objectMapper = new ObjectMapper();
         String orderJson = objectMapper.writeValueAsString(orderDTO);
-        try(JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
+        try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
             //On envoie la commande au livreur  en guise de confirmation
             TextMessage msg = context.createTextMessage(orderJson);
-            context.createProducer().send(context.createQueue("M1."+deliveryManName), msg);
+            context.createProducer().send(context.createQueue("M1." + deliveryManName), msg);
             Log.info("Message de confirmation envoyé au livreur  " + deliveryManName + " pour la commande ID: " + orderModel.getId());
         }
     }
 
-    public void sendInvoice(Order order) throws JsonProcessingException {
-        /*
-        OrderDTO orderDTO = orderService.getOrderDTOFromModel(orderId);
-        //On convertit l'orderDTO en json
-        ObjectMapper objectMapper = new ObjectMapper();
-        String orderJson = objectMapper.writeValueAsString(orderDTO);
-         */
+    public void sendInvoice(Order order)  {
         Menu menu = order.getMenu();
 
         try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
             //On créer un message contenant l'orderDTO sous forme de json
-            TextMessage msg = context.createTextMessage("Chère Client,\n\n Voici la facture de votre commande.\n\n"+
-                    "Votre commande : "+menu.getName() +
-                    "\nMontant total : "+menu.getPrice() +" € \n\n" +
+            TextMessage msg = context.createTextMessage("Chère Client,\n\n Voici la facture de votre commande.\n\n" +
+                    "Votre commande : " + menu.getName() +
+                    "\nMontant total : " + menu.getPrice() + " € \n\n" +
                     "Merci pour votre commande chez Uber Eat," + "\n" +
                     "Bon appétit, à très bientôt !");
             //On envoie l'order aux darkKitchen via le topic M1.DK

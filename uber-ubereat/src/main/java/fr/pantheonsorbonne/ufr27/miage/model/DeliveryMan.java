@@ -1,4 +1,5 @@
 package fr.pantheonsorbonne.ufr27.miage.model;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -16,10 +17,7 @@ public class DeliveryMan {
     private String vehicleType;
 
     @Column(name = "is_available")
-    private Boolean isAvailable=true;
-
-    public DeliveryMan() {
-    }
+    private Boolean isAvailable = true;
 
 
     public String getName() {

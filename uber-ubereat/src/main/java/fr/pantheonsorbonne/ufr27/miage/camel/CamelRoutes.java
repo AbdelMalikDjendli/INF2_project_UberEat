@@ -14,7 +14,6 @@ import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -83,7 +82,7 @@ public class CamelRoutes extends RouteBuilder {
         from("sjms2:queue:M1.FACTURE")
                 .doTry()
                 .setHeader("subject", simple("Votre Facture | Commande UberEat"))
-                .setHeader("to", simple("samraabdul.09@gmail.com"))
+                .setHeader("to", simple("lindabessah1@gmail.com"))
                 //.to("smtps:" + smtpHost + ":" + smtpPort + "?username=" + smtpFrom + "&password=" + smtpPassword );
                 .to("smtps://smtp.gmail.com:465?username=projetjava95@gmail.com&password=gbqe hnue xtsu ttuz");
 
@@ -111,18 +110,17 @@ public class CamelRoutes extends RouteBuilder {
             String correctCode = confirmationCodeService.getCurrentCode();
             String dmName = exchange.getMessage().getHeader("dmName", String.class);
             boolean isGoodDm = deliveryManService.isGoodDm(dmName);
-            if(isGoodDm && body.equals(correctCode)){
-                exchange.getMessage().setHeader("isGoodCode","true");
+            if (isGoodDm && body.equals(correctCode)) {
+                exchange.getMessage().setHeader("isGoodCode", "true");
                 //mettre à jour le statut du livreur
-                deliveryManService.setDeliveryManStatus(dmName,true);
+                deliveryManService.setDeliveryManStatus(dmName, true);
                 //mettre à jour le statut de la commande
                 orderService.updateOrderStatus("Livrée");
                 Log.info("Commande livrée");
                 //Envoyer facture
                 orderGateway.sendInvoice(orderService.getCurrentOrder());
-            }
-            else{
-                exchange.getMessage().setHeader("isGoodCode","false");
+            } else {
+                exchange.getMessage().setHeader("isGoodCode", "false");
             }
         }
     }
@@ -143,24 +141,23 @@ public class CamelRoutes extends RouteBuilder {
             //Une incrémente le nombre d'estimation reçu
             dkChoiceService.setNumberOfEstimation();
             int newEstimation;
-            if(!body.equals("indisponible")){
+            if (!body.equals("indisponible")) {
                 newEstimation = Integer.parseInt(body);
                 //Si l'estimation reçu est plus courte que la précédente alors la stock dans estimation
                 //et on stock le nom de la darkkitchen
-                if(newEstimation<dkChoiceService.getMinEstimation()){
+                if (newEstimation < dkChoiceService.getMinEstimation()) {
                     dkChoiceService.setMinEstimation(newEstimation);
                     dkChoiceService.setDkName(exchange.getMessage().getHeader("dk", String.class));
                 }
             }
-            Thread.sleep(2000); // Délai de 2 secondes
+
 
             //Si toutes les darkkitchen ont répondu alors on envoi la confirmation à la darkkitchen choisi
-            if(dkChoiceService.getNumberOfEstimation()==2){
+            if (dkChoiceService.getNumberOfEstimation() == 2) {
 
-                if(dkChoiceService.getDkName()!=null) {
+                if (dkChoiceService.getDkName() != null) {
                     orderGateway.sendConfirmationToDarkkitchen(dkChoiceService.getDkName());
-                }
-                else{
+                } else {
                     Log.info("Pas de restaurant disponible");
                 }
                 //remettre à 0
@@ -182,7 +179,7 @@ public class CamelRoutes extends RouteBuilder {
             //récupère le name
             String deliveryManName = exchange.getIn().getHeader("deliveryManName", String.class);
             // Appeler la méthode pour confirmer le premier livreur
-            orderGateway.sendConfirmationToDeliveryMan( deliveryManName);
+            orderGateway.sendConfirmationToDeliveryMan(deliveryManName);
 
         }
     }
@@ -194,6 +191,7 @@ public class CamelRoutes extends RouteBuilder {
         OrderService orderService;
 
         Map<Long, Integer> indisponibleCounters = new ConcurrentHashMap<>();
+
         @Override
         public void process(Exchange exchange) throws Exception {
 
