@@ -15,6 +15,9 @@ public class DarkKitchen extends Object {
     private String name;
 
 
+    public void setId(long l) {
+    }
 
-
+    public void setName(String dkName) {
+    }
 }
