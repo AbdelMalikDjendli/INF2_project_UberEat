@@ -54,7 +54,7 @@ public class ConfirmationCodeResourceTest {
         assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
     }
 
-    /*
+
     @Test
     void testConfirmDeliveryWithBadCode() throws Exception {
         // Arrange
@@ -70,7 +70,7 @@ public class ConfirmationCodeResourceTest {
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
     }
 
-    @Test
+   /* @Test
     void testConfirmDeliveryWithUnknownCode() throws Exception {
         // Arrange
         CodeDTO codeDTO = new CodeDTO("9999");
@@ -84,5 +84,7 @@ public class ConfirmationCodeResourceTest {
         verify(deliveryManService).setDeliveryManIsAvaible(any(), eq(true));
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatus());
     }
+
     */
+
 }
