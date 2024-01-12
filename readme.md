@@ -1,61 +1,84 @@
 ## Objectifs du système à modéliser
 
-On propose de modéliser un système de réservation (master) de tickets pouvant supporter plusieurs vendeurs (vendor). Le système master gère les salles, les concerts, les différents artistes se produisant dans les concerts et la réservation des tickets alors que les vendeurs assurent la vente de billets. Chaque vendeur a un quota pour un concert donné, qui peut évoluer avec le temps.
-En cas d'annulation de concert, le système de réservation informe les vendors qui doivent contacter les clients (customers). Le master propose des services de validation de l'authenticité des tickets à l'entrée des concerts.
-
-Lors de la réservation de ticket, on a 2 phases:
-- le booking (réservation des places)
-- le ticketing (émission de billets sécurisés avec clé.)
-
-Le vendor va demander au master via une API rest les concerts pour lesquels il possède un quota. Seuls ces concerts seront proposés à la vente au client.
-Le client spécifie ensuite le nombre de places assises et le nombre de places debout qu'il souhaite acheter. Le vendor interroge le master sur la disponibilité. Celui-ci va lui renvoyer des tickets transitionnels valables 10 minutes en cas de disponibilité de places.
-Le vendeur va ensuite renseigner les informations du client et les transmettre au master pour l'émission finale des tickets avec clé sécurisée qui sera transmise au client pour qu'il puisse entrer dans la salle.
-En cas d'annulation du concert, le master prévient les vendors (avec les informations des tickets à annuler et les emails des clients) le vendeur doit envoyer un email au client pour chaque ticket annulé.
+JPA : (Une base de données par système) Gérez les données des utilisateurs, des restaurants, des menus et des commandes.
+Une base de donnée chacun pour:  (ubereat, darkitchen ,livreur)
+JMS : Envoyez des notifications aux restaurants lorsqu'une nouvelle commande est passée et aux utilisateurs lorsque leur commande est prête.
+REST : Créez des endpoints pour afficher les menus, passez des commandes, et gérer les profils utilisateurs.
+Fonctionnalités : Système de paiement, suivi de commande en temps réel, recommandations personnalisées.
+Notre projet a 2 livreurs et 2 dark kitchens.
 
 ## Interfaces
 
-```
-deliveryMan->master: POST venue
-vendor->master: GET Gigs
-master->vendor: Collection<Gigs>
+Client->UberEats: GET menu (via API REST)
+UberEats->Client : API REST: Envoi des menus
+Client->UberEats: POST Choix du menu (via API REST)
+UberEats->DarkKitchen : JMS: Notification nouvelle commande
 
-Customer->vendor: cli:gig selection
+alt Au moins une DarkKitchen disponible
+    DarkKitchen->UberEats: JMS: Réponse avec estimation du temps
+    note right of UberEats: Choix de la dk avec le temps de préparation le plus court
+    UberEats->DarkKitchen : JMS: Confirmation de la commande
+    Client->UberEats: GET Statut de la commande (via API REST)
+    UberEats->Client: API REST: Envoi du statut actuel de la commande (En cours de préparation)
+    UberEats->Livreur: JMS: Recherche de livreurs disponibles
 
-vendor->master: jms:booking
-alt booking successfull
-    master->vendor: transitional tickets
-    vendor->Customer: ticket purshase ok
-    Customer->vendor: cli:customer informations
-    
-    vendor->master: jms:ticketing
-    master->vendor: tickets
-
-else booking unsuccessfull
-    master->vendor: no quota for gigs
+    alt Livreur disponible
+        Livreur->UberEats: JMS: peux prendre la commande
+        note right of UberEats: Sélection du premier livreur disponible
+        UberEats->Livreur: JMS: Confirmation de la prise en charge
+         Client->UberEats: GET Statut de la commande (via API REST)
+    UberEats->Client: API REST: Envoi du statut actuel de la commande (livreur trouvé)
+        Livreur->DarkKitchen : JMS: Récupération de la commande
+    DarkKitchen ->UberEats: JMS: Notification commande récupérée par le livreur
+    Client->UberEats: GET Statut de la commande (via API REST)
+    UberEats->Client: API REST: Envoi du statut actuel de la commande (en cours de livraison)
+Client->UberEats: GET demande code conifrmation livraison (via API REST)
+UberEats->Client: API REST: Envoi du code de confirmation
+Client->Livreur: POST donne le code de confirmation (via API REST)
+Livreur->UberEats: JMS transmet le code de confirmation
+alt Code bon
+        Client->UberEats: GET Statut de la commande (via API REST)
+        UberEats->Client: API REST: Envoi du statut actuel de la commande (livrée)
+        UberEats->Client: SMTP/SMS API: Envoi de la facture
+    else Code incorrect
+    Client->UberEats: GET Statut de la commande (via API REST)
+    UberEats->Client: API REST: Envoi du statut actuel de la commande (en cours de livraison)
+end
+else Aucun livreur disponible
+Client->UberEats: GET Statut de la commande (via API REST)
+UberEats->Client: API REST: Envoi du statut actuel de la commande (pas de livreur disponible)
+end
+else Aucune DarkKitchen disponible
+DarkKitchen->UberEats: JMS: Réponse indiquant indisponible
 end
 
-opt venue cancellation
-    deliveryMan->master: DELETE venue
-    master->vendor: jms:topic:cancellation
-    vendor->Customer: smtp:cancellation email
-end
-```
-![](seqDiagram.png)
+![](seqDiagram.jpeg)
 
-## Schéma relationnel
 
-![](EER.png)
 
-## Exigences fonctionnelles
+## Exigences fonctionnelles ET non fonctionnelles par système
 
-* le vendor NE DOIT proposer que les concerts pour lesquels il a un quota disponible, transmis par le master.
-* le vendor DOIT pouvoir effectuer les opérations de booking et ticketing
-* le master DOIT permettre à l'artiste d'annuler son concert.
-* le master DOIT informer le vendor en cas d'annulation de concert
-* le vendor DOIT informer les clients de l'annulation du concert par mail
-* le master DOIT proposer un service de validation de la clé du ticket, pour les contrôles aux entées.
+### Uber Eats
 
-## Exigences non fonctionnelles
+* Uber Eats DOIT permettre aux clients de choisir un plat via une API REST.
+* Uber Eats DOIT demander et recevoir des estimations de temps de préparation et de livraison des restaurants via JMS.
+* Uber Eats DOIT assigner la commande au restaurant ayant le temps total (préparation + livraison) le plus court.
+* Uber Eats DOIT assigner les commandes aux livreurs disponibles en fonction de leur proximité avec le restaurant via JMS.
+* Uber Eats DOIT informer les clients de l'état de leur commande via REST.
+* En cas d'indisponibilité de livreurs ou de temps de livraison trop long, le système DOIT notifier les clients de l'annulation via API REST.
 
-* le booking et le ticketing, bien qu'étant des opérations synchrones, DOIVENT être fiables et donc utiliser le messaging
-* Lors de l'annulation de tickets, le master DOIT informer tous les vendors de l'annulation, de façon fiable.
+### Dark Kitchens
+
+* Les dark kitchen DOIVENT pouvoir reçevoir une notification via UberEats d’une commande à réaliser.
+* Les dark kitchen DOIVENT pouvoir donner une estimation du temps de préparation de la commande à Uber via JMS
+
+### Livreurs
+
+* Un livreur reçoit des commandes de la part d’uber
+* Un livreur DOIT livrer une seule commande en même temps
+* Un livreur peut accepter ou refuser une commande 
+* Le livreur a accès aux information de la commande (adresse resto, adresse client, numéro commande, distance)
+* Le livreur doit confirmer la prise en charge d’une commande auprès du restaurant, ce qui va faire passer le statut de la commande de “en préparation” à “en cours de livraison”, Uber en est informé via JMS.
+* Le livreur doit confirmer la livraison en faisant le post d’un code fourni par le client, ce qui va faire passer le statut de la commande de “en cours de livraison” à “livré”, Uber en est informé via JMS.
+
+
