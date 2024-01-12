@@ -1,11 +1,11 @@
 ## Objectifs du système à modéliser
 
-JPA : (Une base de données par système) Gérez les données des utilisateurs, des restaurants, des menus et des commandes.
+* JPA : (Une base de données par système) Gérez les données des utilisateurs, des restaurants, des menus et des commandes.
 Une base de donnée chacun pour:  (ubereat, darkitchen ,livreur)
-JMS : Envoyez des notifications aux restaurants lorsqu'une nouvelle commande est passée et aux utilisateurs lorsque leur commande est prête.
-REST : Créez des endpoints pour afficher les menus, passez des commandes, et gérer les profils utilisateurs.
-Fonctionnalités : Système de paiement, suivi de commande en temps réel, recommandations personnalisées.
-Notre projet a 2 livreurs et 2 dark kitchens.
+* JMS : Envoyez des notifications aux restaurants lorsqu'une nouvelle commande est passée et aux utilisateurs lorsque leur commande est prête.
+* REST : Créez des endpoints pour afficher les menus, passez des commandes, et gérer les profils utilisateurs.
+* Fonctionnalités : Système de paiement, suivi de commande en temps réel, recommandations personnalisées.
+* Notre projet a 2 livreurs et 2 dark kitchens.
 
 ## Interfaces
 
@@ -26,7 +26,7 @@ alt Au moins une DarkKitchen disponible
         Livreur->UberEats: JMS: peux prendre la commande
         note right of UberEats: Sélection du premier livreur disponible
         UberEats->Livreur: JMS: Confirmation de la prise en charge
-         Client->UberEats: GET Statut de la commande (via API REST)
+        Client->UberEats: GET Statut de la commande (via API REST)
     UberEats->Client: API REST: Envoi du statut actuel de la commande (livreur trouvé)
         Livreur->DarkKitchen : JMS: Récupération de la commande
     DarkKitchen ->UberEats: JMS: Notification commande récupérée par le livreur
@@ -37,10 +37,10 @@ UberEats->Client: API REST: Envoi du code de confirmation
 Client->Livreur: POST donne le code de confirmation (via API REST)
 Livreur->UberEats: JMS transmet le code de confirmation
 alt Code bon
-        Client->UberEats: GET Statut de la commande (via API REST)
-        UberEats->Client: API REST: Envoi du statut actuel de la commande (livrée)
-        UberEats->Client: SMTP/SMS API: Envoi de la facture
-    else Code incorrect
+    Client->UberEats: GET Statut de la commande (via API REST)
+    UberEats->Client: API REST: Envoi du statut actuel de la commande (livrée)
+    UberEats->Client: SMTP/SMS API: Envoi de la facture
+else Code incorrect
     Client->UberEats: GET Statut de la commande (via API REST)
     UberEats->Client: API REST: Envoi du statut actuel de la commande (en cours de livraison)
 end
@@ -51,6 +51,7 @@ end
 else Aucune DarkKitchen disponible
 DarkKitchen->UberEats: JMS: Réponse indiquant indisponible
 end
+
 
 ![](seqDiagram.jpeg)
 
