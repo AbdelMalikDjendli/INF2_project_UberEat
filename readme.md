@@ -1,11 +1,13 @@
 ## Objectifs du système à modéliser
+Ce projet modélise un système de commande et de livraison pour une plateforme de type Uber Eats, intégrant des interactions entre le client, le système Uber Eats, les cuisines partenaires (Dark Kitchen) et les livreurs. Le système permet au client de choisir un menu, passer une commande, et suivre le statut de cette commande jusqu'à la livraison.
 
-* JPA : (Une base de données par système) Gérez les données des utilisateurs, des restaurants, des menus et des commandes.
-Une base de donnée chacun pour:  (ubereat, darkitchen ,livreur)
-* JMS : Envoyez des notifications aux restaurants lorsqu'une nouvelle commande est passée et aux utilisateurs lorsque leur commande est prête.
-* REST : Créez des endpoints pour afficher les menus, passez des commandes, et gérer les profils utilisateurs.
-* Fonctionnalités : Système de paiement, suivi de commande en temps réel, recommandations personnalisées.
-* Notre projet a 2 livreurs et 2 dark kitchens.
+* Le client peut consulter les menus disponibles via une API REST.
+* Le client peut passer une commande qui sera envoyée à toutes les Dark Kitchens.
+* Chaque Dark Kitchen donne une estimation de temps de préparation via JMS.
+* Uber Eats recherche des livreurs disponibles. Les livreurs disponibles et avec le mode de transport acceptent la commande. UberEat selectionne le premier livreur.
+* Le client peut suivre le statut de sa commande via l'API REST à différentes étapes.
+* Le livreur récupère la commande à la Dark Kitchen. 
+* Le client reçoit un code de confirmation pour valider la livraison que le livreur doit donner à UberEat via l'API REST. La commande est livrée,une facture est générée et envoyée au client.
 
 ## Interfaces
 
@@ -65,10 +67,10 @@ Une base de donnée chacun pour:  (ubereat, darkitchen ,livreur)
 
 * Uber Eats DOIT permettre aux clients de choisir un plat via une API REST.
 * Uber Eats DOIT demander et recevoir des estimations de temps de préparation et de livraison des restaurants via JMS.
-* Uber Eats DOIT assigner la commande au restaurant ayant le temps total (préparation + livraison) le plus court.
-* Uber Eats DOIT assigner les commandes aux livreurs disponibles en fonction de leur proximité avec le restaurant via JMS.
+* Uber Eats DOIT assigner la commande au restaurant ayant le temps de préparation le plus court.
+* Uber Eats DOIT assigner les commandes aux livreurs disponibles en fonction de leur mode de transport et leur disponibilité avec le restaurant via JMS.
 * Uber Eats DOIT informer les clients de l'état de leur commande via REST.
-* En cas d'indisponibilité de livreurs ou de temps de livraison trop long, le système DOIT notifier les clients de l'annulation via API REST.
+* En cas d'indisponibilité de livreurs ou de darkkitchen, le système DOIT notifier les clients de l'annulation via API REST.
 
 ### Dark Kitchens
 
@@ -80,7 +82,7 @@ Une base de donnée chacun pour:  (ubereat, darkitchen ,livreur)
 * Un livreur reçoit des commandes de la part d’uber
 * Un livreur DOIT livrer une seule commande en même temps
 * Un livreur peut accepter ou refuser une commande 
-* Le livreur a accès aux information de la commande (adresse resto, adresse client, numéro commande, distance)
+* Le livreur a accès aux information de la commande 
 * Le livreur doit confirmer la prise en charge d’une commande auprès du restaurant, ce qui va faire passer le statut de la commande de “en préparation” à “en cours de livraison”, Uber en est informé via JMS.
 * Le livreur doit confirmer la livraison en faisant le post d’un code fourni par le client, ce qui va faire passer le statut de la commande de “en cours de livraison” à “livré”, Uber en est informé via JMS.
 
