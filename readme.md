@@ -27,30 +27,33 @@ alt Au moins une DarkKitchen disponible
         note right of UberEats: Sélection du premier livreur disponible
         UberEats->Livreur: JMS: Confirmation de la prise en charge
         Client->UberEats: GET Statut de la commande (via API REST)
-    UberEats->Client: API REST: Envoi du statut actuel de la commande (livreur trouvé)
+        UberEats->Client: API REST: Envoi du statut actuel de la commande (livreur trouvé)
         Livreur->DarkKitchen : JMS: Récupération de la commande
-    DarkKitchen ->UberEats: JMS: Notification commande récupérée par le livreur
-    Client->UberEats: GET Statut de la commande (via API REST)
-    UberEats->Client: API REST: Envoi du statut actuel de la commande (en cours de livraison)
-Client->UberEats: GET demande code conifrmation livraison (via API REST)
-UberEats->Client: API REST: Envoi du code de confirmation
-Client->Livreur: POST donne le code de confirmation (via API REST)
-Livreur->UberEats: JMS transmet le code de confirmation
-alt Code bon
-    Client->UberEats: GET Statut de la commande (via API REST)
-    UberEats->Client: API REST: Envoi du statut actuel de la commande (livrée)
-    UberEats->Client: SMTP/SMS API: Envoi de la facture
-else Code incorrect
-    Client->UberEats: GET Statut de la commande (via API REST)
-    UberEats->Client: API REST: Envoi du statut actuel de la commande (en cours de livraison)
-end
-else Aucun livreur disponible
-Client->UberEats: GET Statut de la commande (via API REST)
-UberEats->Client: API REST: Envoi du statut actuel de la commande (pas de livreur disponible)
-end
+        DarkKitchen ->UberEats: JMS: Notification commande récupérée par le livreur
+        Client->UberEats: GET Statut de la commande (via API REST)
+        UberEats->Client: API REST: Envoi du statut actuel de la commande (en cours de livraison)
+    else Aucun livreur disponible
+        Client->UberEats: GET Statut de la commande (via API REST)
+        UberEats->Client: API REST: Envoi du statut actuel de la commande (pas de livreur disponible)
+    end
+
+    Client->UberEats: GET demande code conifrmation livraison (via API REST)
+    UberEats->Client: API REST: Envoi du code de confirmation
+    Client->Livreur: POST donne le code de confirmation (via API REST)
+    Livreur->UberEats: JMS transmet le code de confirmation
+
+    alt Code bon
+        Client->UberEats: GET Statut de la commande (via API REST)
+        UberEats->Client: API REST: Envoi du statut actuel de la commande (livrée)
+        UberEats->Client: SMTP/SMS API: Envoi de la facture
+    else Code incorrect
+        Client->UberEats: GET Statut de la commande (via API REST)
+        UberEats->Client: API REST: Envoi du statut actuel de la commande (en cours de livraison)
+    end
 else Aucune DarkKitchen disponible
-DarkKitchen->UberEats: JMS: Réponse indiquant indisponible
+    DarkKitchen->UberEats: JMS: Réponse indiquant indisponible
 end
+
 
 
 ![](seqDiagram.jpeg)
