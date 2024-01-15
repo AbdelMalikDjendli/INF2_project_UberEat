@@ -27,13 +27,13 @@ public class DkServiceImplTest {
 
     @Test
     public void testGetCurrentDkName() {
-        // Définissez le comportement simulé du mock DkDAO
+
         when(dkDAO.getDKName()).thenReturn("DKTest");
 
-        // Appelez la méthode à tester dans DkServiceImpl
+
         String result = dkService.getCurrentDkName();
 
-        // Vérifiez le résultat
+
         Assertions.assertEquals("DKTest", result);
     }
 }

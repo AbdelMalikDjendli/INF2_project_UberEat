@@ -31,20 +31,19 @@ class MenuRessourceTest {
 
     @Test
     void testGetMenus() {
-        // Créez une liste de menus simulée
+
         List<Menu> mockMenuList = Arrays.asList(
                 createMenu("Ravioli", "Ravioli Fromage"),
                 createMenu("Lasagna", "Garfields favorite dish"),
                 createMenu("Penne", "Italian pasta")
         );
 
-        // Définissez le comportement simulé du mock MenuDAO
         when(menuDAO.getAllMenu()).thenReturn(mockMenuList);
 
-        // Appelez la méthode getMenus de MenuResource
+
         Response response = menuRessource.getMenus();
 
-        // Vérifiez que la réponse contient la liste simulée de menus
+
         assertEquals(200, response.getStatus());
         assertEquals(mockMenuList, response.getEntity());
     }

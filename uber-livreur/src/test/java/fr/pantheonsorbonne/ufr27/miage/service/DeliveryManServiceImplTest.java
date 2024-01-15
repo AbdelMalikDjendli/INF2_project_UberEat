@@ -25,27 +25,18 @@ public class DeliveryManServiceImplTest {
 
     @Test
     void testIsDeliveryManAvailable() {
-        // Définissez le comportement simulé du mock DeliveryManDAO
-        when(deliveryManDAO.isDeliveryManAvaible()).thenReturn(true);
 
-        // Testez la méthode isDeliveryManAvailable de DeliveryManServiceImpl
+        when(deliveryManDAO.isDeliveryManAvaible()).thenReturn(true);
         boolean result = deliveryManService.isDeliveryManAvailable();
 
-        // Vérifiez que la méthode isDeliveryManAvaible du mock DeliveryManDAO a été appelée
-        // Vérifiez que le résultat est vrai (true)
         assertTrue(result);
     }
 
     @Test
     void testGetVehiculeDeliveryMan() {
-        // Définissez le comportement simulé du mock DeliveryManDAO
+
         when(deliveryManDAO.getDeliveryManVehicule()).thenReturn("Car");
-
-        // Testez la méthode getVehiculeDeliveryMan de DeliveryManServiceImpl
         String result = deliveryManService.getVehiculeDeliveryMan();
-
-        // Vérifiez que la méthode getDeliveryManVehicule du mock DeliveryManDAO a été appelée
-        // Vérifiez que le résultat est "Car"
         assertEquals("Car", result);
     }
 

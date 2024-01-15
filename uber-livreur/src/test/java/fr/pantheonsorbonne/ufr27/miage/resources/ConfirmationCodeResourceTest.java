@@ -69,22 +69,6 @@ public class ConfirmationCodeResourceTest {
 
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
     }
-/*
-    @Test
-    void testConfirmDeliveryWithUnknownCode() throws Exception {
-        // Arrange
-        CodeDTO codeDTO = new CodeDTO("9999");
-        when(confirmationCodeService.isGoodCode()).thenReturn(null);
 
-        // Act
-        Response response = confirmationCodeResource.confirmDelivery(codeDTO);
-
-        // Assert
-        verify(orderGateway).sendConfirmationCode("9999");
-        verify(deliveryManService).setDeliveryManIsAvaible(any(), eq(true));
-        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatus());
-    }
-
- */
 
 }

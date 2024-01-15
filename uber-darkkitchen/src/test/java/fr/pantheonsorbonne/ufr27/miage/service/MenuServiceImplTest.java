@@ -32,17 +32,17 @@ public class MenuServiceImplTest {
 
     @Test
     void testIsMenuPreparedByDk() {
-        // Créez une liste de menus simulée
+
         List<Menu> mockMenuList = Arrays.asList(
                 createMenu("Pizza", "Delicious pizza"),
                 createMenu("Burger", "Tasty burger"),
                 createMenu("Pasta", "Italian pasta")
         );
 
-        // Définissez le comportement simulé du mock MenuDAO
+
         when(menuDAO.getAllMenu()).thenReturn(mockMenuList);
 
-        // Testez la méthode isMenuPreparedByDk
+
         assertTrue(menuService.isMenuPreparedByDk("Pizza"));
         assertFalse(menuService.isMenuPreparedByDk("Salad"));
     }

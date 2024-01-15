@@ -32,19 +32,19 @@ public class OrderServiceImplTest {
 
     @Test
     void testCreateOrder() {
-        // Créez un menu simulé
+
         Menu mockMenu = new Menu();
         mockMenu.setId(1L);
         mockMenu.setName("Pizza");
         mockMenu.setDescription("Delicious pizza");
 
-        // Définissez le comportement simulé du mock MenuDAO
+
         when(menuDAO.findMenuByName("Pizza")).thenReturn(mockMenu);
 
-        // Testez la méthode createOrder
+
         orderService.createOrder("Pizza");
 
-        // Vérifiez que la méthode newOrder du mock OrderDAO a été appelée avec le menu simulé
+
         verify(orderDAO).newOrder(mockMenu);
     }
 }
